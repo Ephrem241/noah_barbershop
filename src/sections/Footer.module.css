@@ -73,6 +73,21 @@
   font-size: 0.6875rem;
 }
 
+/* Discreet entry to /admin for the shop's staff */
+.staff {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  color: var(--text-dim);
+  font-size: 0.6875rem;
+  transition: color var(--dur) var(--ease);
+}
+
+.staff:hover {
+  color: var(--gold);
+}
+
 @media (max-width: 767px) {
   .inner {
     grid-template-columns: 1fr;

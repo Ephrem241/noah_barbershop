@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Icon } from '../components/Icon'
 import { Logo } from '../components/Logo'
 import { useShop } from '../content/hooks'
@@ -47,6 +48,10 @@ export function Footer() {
           <p className={styles.copyright}>
             © {site.copyrightYear} {site.name}. All rights reserved.
           </p>
+          <Link to="/admin" className={styles.staff}>
+            <Icon name="users" size={13} strokeWidth={1.7} />
+            Staff sign in
+          </Link>
         </div>
       </div>
     </footer>

@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { Button } from '../components/Button'
 import { Icon } from '../components/Icon'
 import { isSupabaseConfigured } from '../lib/supabase'
-import { readAuthError, signInWithGoogle, signOut, useIsAdmin, useSession } from './auth'
+import { readAuthError, signInWithGoogle, signOut, useGoogleEnabled, useIsAdmin, useSession } from './auth'
 import { SessionContext } from './session'
 import { errorMessage } from './ui/feedback'
 import styles from './admin.module.css'
@@ -37,6 +37,8 @@ function GoogleMark() {
 function LoginScreen() {
   const [error, setError] = useState<string | null>(readAuthError)
   const [busy, setBusy] = useState(false)
+  const googleEnabled = useGoogleEnabled().data
+  const googleOff = googleEnabled === false
 
   const login = async () => {
     setBusy(true)
@@ -52,10 +54,19 @@ function LoginScreen() {
   return (
     <Screen title="Admin sign in">
       <p className={styles.screenText}>Manage barbers, services, prices, photos and booking requests.</p>
-      <button type="button" className={styles.googleButton} onClick={login} disabled={busy}>
+      <button type="button" className={styles.googleButton} onClick={login} disabled={busy || googleOff}>
         <GoogleMark />
         {busy ? 'Opening Google…' : 'Sign in with Google'}
       </button>
+      {googleOff ? (
+        <p className={styles.screenError} role="status">
+          Google sign-in isn’t switched on yet.
+          <br />
+          <span className={styles.screenHint}>
+            Supabase Dashboard → Authentication → Sign In / Providers → Google (see docs/ADMIN_SETUP.md).
+          </span>
+        </p>
+      ) : null}
       {error ? (
         <p className={styles.screenError} role="alert">
           {error}

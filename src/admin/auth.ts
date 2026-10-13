@@ -1,7 +1,31 @@
 import type { Session } from '@supabase/supabase-js'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { isSupabaseConfigured, requireSupabase, supabase } from '../lib/supabase'
+import { isSupabaseConfigured, requireSupabase, supabase, supabaseKey, supabaseUrl } from '../lib/supabase'
+
+/**
+ * Is Google sign-in switched on in the Supabase dashboard? Reads the public auth settings, so the login
+ * screen can explain instead of sending the user to a raw "provider is not enabled" error page.
+ * Resolves to null when it can't tell — the button then simply tries.
+ */
+export function useGoogleEnabled() {
+  return useQuery({
+    queryKey: ['auth', 'google-enabled'],
+    enabled: isSupabaseConfigured,
+    staleTime: 5 * 60_000,
+    retry: false,
+    queryFn: async () => {
+      try {
+        const res = await fetch(`${supabaseUrl}/auth/v1/settings`, { headers: { apikey: supabaseKey } })
+        if (!res.ok) return null
+        const json = (await res.json()) as { external?: Record<string, boolean> }
+        return json.external?.google ?? null
+      } catch {
+        return null
+      }
+    },
+  })
+}
 
 export function useSession() {
   const [state, setState] = useState<{ session: Session | null; loading: boolean }>({
