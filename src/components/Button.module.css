@@ -4,9 +4,10 @@
   justify-content: center;
   gap: 10px;
   border: 1px solid transparent;
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   font-family: var(--font-sans);
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
@@ -16,46 +17,46 @@
     color var(--dur) var(--ease);
 }
 
+.button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 .md {
-  height: 46px;
-  padding: 0 24px;
-  font-size: 0.84375rem; /* 13.5px */
+  min-height: 50px;
+  padding: 0 26px;
+  font-size: 0.9375rem;
 }
 
 .sm {
-  height: 38px;
+  min-height: 44px;
   padding: 0 20px;
-  font-size: 0.71875rem; /* 11.5px */
-  gap: 9px;
+  font-size: 0.875rem;
+  gap: 8px;
 }
 
-.primary,
-.pill {
-  background: var(--gold-btn);
-  color: var(--text-on-gold);
+.primary {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
 }
 
-.primary:hover,
-.pill:hover {
-  background: var(--gold-btn-hover);
-}
-
-.pill {
-  height: 43px;
-  padding: 0 22px;
-  border-radius: var(--radius-pill);
-  font-size: 0.78125rem;
+.primary:hover:not(:disabled) {
+  background: var(--btn-bg-hover);
 }
 
 .secondary {
-  border-color: var(--gold-line);
+  border-color: var(--border-strong);
   background: transparent;
   color: var(--text);
 }
 
-.secondary:hover {
-  border-color: var(--gold);
-  background: rgba(212, 167, 102, 0.08);
+.secondary:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+.secondary svg:first-child {
+  color: var(--accent);
 }
 
 .arrow {

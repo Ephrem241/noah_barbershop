@@ -61,14 +61,16 @@ export function BarberProfile({ barber, headingRef, onOpenMedia, onRequest }: Ba
                   Telegram<span className="visually-hidden"> (opens in a new tab)</span>
                 </Button>
               ) : null}
-              <Button
-                href={whatsappHref(barber.whatsapp ?? phone, bookingMessage(name))}
-                variant="secondary"
-                icon="whatsapp"
-                {...newTab}
-              >
-                WhatsApp<span className="visually-hidden"> (opens in a new tab)</span>
-              </Button>
+              {barber.whatsapp ? (
+                <Button
+                  href={whatsappHref(barber.whatsapp, bookingMessage(name))}
+                  variant="secondary"
+                  icon="whatsapp"
+                  {...newTab}
+                >
+                  WhatsApp<span className="visually-hidden"> (opens in a new tab)</span>
+                </Button>
+              ) : null}
             </div>
             <button type="button" className={styles.request} onClick={onRequest}>
               <Icon name="calendar" size={15} strokeWidth={1.7} />

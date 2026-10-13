@@ -23,7 +23,6 @@ export const site = {
     rating: 5,
     count: 11,
   },
-  copyrightYear: 2025,
 } as const
 
 // TODO: replace '#' with the shop's real profile URLs.
@@ -33,13 +32,12 @@ export const socials = [
   { label: 'TikTok', icon: 'tiktok', href: '#' },
 ] as const
 
+/** Homepage sections in the navbar and footer (the logo links to #home; "Book Now" to #booking). */
 export const navLinks = [
-  { id: 'home', label: 'Home' },
   { id: 'services', label: 'Services' },
-  { id: 'gallery', label: 'Gallery' },
+  { id: 'gallery', label: 'Our Work' },
+  { id: 'barbers', label: 'Barbers' },
   { id: 'about', label: 'About' },
   { id: 'reviews', label: 'Reviews' },
   { id: 'contact', label: 'Contact' },
 ] as const
-
-export type SectionId = (typeof navLinks)[number]['id']

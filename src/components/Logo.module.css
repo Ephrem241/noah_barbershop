@@ -1,5 +1,6 @@
 .logo {
   display: inline-flex;
+  flex: none;
   flex-direction: column;
   align-items: center;
   color: var(--text);
@@ -8,64 +9,49 @@
 
 .crown {
   width: auto;
+  color: var(--accent);
 }
 
 .word {
   font-family: var(--font-serif);
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  padding-left: 0.14em; /* optically re-center the tracked word */
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  padding-left: 0.16em; /* optically re-center the tracked word */
 }
 
 .sub {
   font-family: var(--font-sans);
-  font-weight: 500;
-  letter-spacing: 0.56em;
-  padding-left: 0.56em;
+  font-weight: 600;
+  letter-spacing: 0.52em;
+  padding-left: 0.52em;
 }
 
 /* Navbar */
 .nav .crown {
-  height: 22px;
-  margin-bottom: 5px;
+  height: 12px;
+  margin-bottom: 4px;
 }
 
 .nav .word {
-  font-size: 36px;
+  font-size: 25px;
 }
 
 .nav .sub {
-  margin-top: 7px;
-  font-size: 10px;
+  margin-top: 5px;
+  font-size: 7.5px;
 }
 
 /* Footer */
 .footer .crown {
-  height: 18px;
+  height: 16px;
   margin-bottom: 6px;
 }
 
 .footer .word {
-  font-size: 28px;
+  font-size: 32px;
 }
 
 .footer .sub {
-  margin-top: 6px;
-  font-size: 8px;
-}
-
-@media (max-width: 767px) {
-  .nav .crown {
-    height: 13px;
-    margin-bottom: 3px;
-  }
-
-  .nav .word {
-    font-size: 26px;
-  }
-
-  .nav .sub {
-    margin-top: 4px;
-    font-size: 7.5px;
-  }
+  margin-top: 7px;
+  font-size: 9px;
 }

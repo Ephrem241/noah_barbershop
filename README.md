@@ -4,9 +4,13 @@ Website and admin panel for **Noah Barbershop**, Addis Ababa: a one-page site wi
 prices, gallery, client reviews and a live map, plus a Google-sign-in admin panel to manage everything.
 
 ## Features
-- **Website**: hero, services & prices, gallery, about, Tripadvisor reviews slider, Visit Us with an exact-pin Google map.
-- **Booking**: "Book Appointment" opens a barber picker → profile with work photos/videos and Call / Telegram /
-  WhatsApp buttons, or an appointment-request form (`#book`, `#book/<barber>` links are shareable).
+- **Website**: hero, Tripadvisor trust band, services menu (prices, optional durations, per-service Book), “Our Work”
+  gallery with style filters and a lightbox, barber profiles, about, reviews slider, booking section, Visit Us with an
+  exact-pin Google map, and a sticky Book / Call bar on phones. Dark charcoal + warm ivory theme (`src/styles/`).
+- **Booking**: every “Book” button leads to the appointment-request form (`#booking`), which lands in the admin
+  inbox — a request, confirmed by phone. Barber cards open a profile with work photos/videos and a Call button
+  (`#book`, `#book/<barber>`, `#book/request` links are shareable).
+- **SEO**: `BarberShop` structured data, canonical/Open Graph tags (`index.html`), `robots.txt`, `sitemap.xml`.
 - **Admin** (`/admin`, Google sign-in, admins only): booking-request inbox (live), barbers + media uploads, services &
   prices, gallery, testimonials, shop info (phone, hours, map pin, socials), admin list.
 

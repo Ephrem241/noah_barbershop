@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from '../../components/Button'
-import { formatPrice } from '../../content/api'
+import { formatDuration, formatPrice } from '../../content/api'
 import type { Tables } from '../../lib/database.types'
 import { mediaUrl, removeMedia } from '../../lib/media'
 import { nextSortOrder, useReorder, useRows, useTableMutations } from '../data'
@@ -12,7 +12,16 @@ import { SortButtons } from '../ui/SortButtons'
 import styles from '../admin.module.css'
 
 type Service = Tables<'services'>
-type Draft = { id?: string; title: string; description: string; price: string; price_is_from: boolean; image_path: string | null; is_active: boolean }
+type Draft = {
+  id?: string
+  title: string
+  description: string
+  price: string
+  price_is_from: boolean
+  duration: string
+  image_path: string | null
+  is_active: boolean
+}
 
 const toDraft = (s?: Service): Draft => ({
   id: s?.id,
@@ -20,6 +29,7 @@ const toDraft = (s?: Service): Draft => ({
   description: s?.description ?? '',
   price: s ? String(s.price_etb) : '',
   price_is_from: s?.price_is_from ?? true,
+  duration: s?.duration_minutes ? String(s.duration_minutes) : '',
   image_path: s?.image_path ?? null,
   is_active: s?.is_active ?? true,
 })
@@ -51,6 +61,10 @@ export function ServicesPage() {
     const e: Record<string, string> = {}
     if (!draft.title.trim()) e.title = 'Title is required.'
     if (!draft.price.trim() || !Number.isInteger(price) || price < 0) e.price = 'Enter the price in birr, e.g. 350.'
+    const duration = draft.duration.trim() ? Number(draft.duration) : null
+    if (duration !== null && !(Number.isInteger(duration) && duration >= 5 && duration <= 480)) {
+      e.duration = 'Enter minutes between 5 and 480, or leave empty.'
+    }
     setErrors(e)
     if (Object.keys(e).length) return
 
@@ -59,6 +73,7 @@ export function ServicesPage() {
       description: draft.description.trim(),
       price_etb: price,
       price_is_from: draft.price_is_from,
+      duration_minutes: duration,
       image_path: draft.image_path,
       is_active: draft.is_active,
     }
@@ -93,7 +108,7 @@ export function ServicesPage() {
       <div className={styles.pageHead}>
         <div>
           <h1 className={styles.pageTitle}>Services & prices</h1>
-          <p className={styles.pageLead}>Shown in “More Than Just a Haircut” and in the booking request form.</p>
+          <p className={styles.pageLead}>Shown in the Services menu and in the booking request form.</p>
         </div>
         <Button icon="plus" onClick={() => open()}>
           Add service
@@ -113,6 +128,7 @@ export function ServicesPage() {
                 <p className={styles.rowTitle}>{s.title}</p>
                 <p className={styles.rowMeta}>
                   <span className={styles.price}>{formatPrice(s.price_etb, s.price_is_from)}</span>
+                  {s.duration_minutes ? <span>{formatDuration(s.duration_minutes)}</span> : null}
                   <span>{s.description}</span>
                   {!s.is_active ? <span className={styles.pill}>Hidden</span> : null}
                 </p>
@@ -177,6 +193,15 @@ export function ServicesPage() {
                 />
               </div>
             </div>
+            <TextField
+              label="Duration (minutes)"
+              value={draft.duration}
+              error={errors.duration}
+              inputMode="numeric"
+              placeholder="45"
+              hint={draft.duration ? `Shows as ${formatDuration(Number(draft.duration) || 0) || '—'}` : 'Optional — leave empty to hide it on the website.'}
+              onChange={(e) => setDraft({ ...draft, duration: e.target.value.replace(/[^\d]/g, '') })}
+            />
             <ImageInput label="Image" value={draft.image_path} folder="services" aspect="256 / 116" onChange={(p) => setDraft({ ...draft, image_path: p })} />
             <Toggle label="Visible on the website" checked={draft.is_active} onChange={(v) => setDraft({ ...draft, is_active: v })} />
           </>

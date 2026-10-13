@@ -6,7 +6,9 @@ admin inbox.
 
 - Supabase project: **naoh_barbershop** — `https://wxyfhszrtumhpavjmhul.supabase.co`
 - First admin: **eph8611@gmail.com** (add more under *Admins* in the panel)
-- Database schema & security rules: `supabase/migrations/` (already applied)
+- Database schema & security rules: `supabase/migrations/` (all applied, the latest being
+  `20261014120000_duration_category_contacts`: service durations, gallery categories)
+- New migrations: run the file in Supabase → **SQL Editor**, *before* deploying code that uses it.
 
 ## 1. Turn on Google sign-in (one time, ~10 minutes)
 
@@ -42,9 +44,9 @@ Open `https://<your-site>/admin` → **Sign in with Google**.
 | Page | What you can do |
 |---|---|
 | Booking requests | New requests appear instantly. Call or WhatsApp the client, set the status (new → confirmed → done / cancelled), add a private note. |
-| Barbers | Add, edit, hide, reorder, delete. Portrait, bio, specialties, phone, Telegram, WhatsApp. Upload work photos and videos. Turn off “Sample profile” once a profile is real. |
-| Services & prices | Title, description, price in birr (“from” price shows as *ETB 350+*), image, order, hide. |
-| Gallery | Upload photos (resized automatically), describe each, reorder, hide. The homepage shows the first five visible ones. |
+| Barbers | Add, edit, hide, reorder, delete. Portrait, bio, specialties, phone; Telegram and WhatsApp buttons appear only when those fields are filled in. Upload work photos and videos. Turn off “Sample profile” once a profile is real. |
+| Services & prices | Title, description, price in birr (a “from” price shows as *from ETB 350*), optional duration in minutes (shown only when filled in), image, order, hide. |
+| Gallery | Upload photos (resized automatically), describe each, pick a category, reorder, hide. “Our Work” shows every visible photo; the style filters appear once photos use at least two categories. |
 | Testimonials | Add real client reviews with source and date, reorder, hide. They appear in the “Reviews” section. |
 | Shop info | Phone, address, **exact map location**, opening hours, Tripadvisor badge (link, rating, review count), Instagram / Facebook / TikTok links. |
 | Admins | Add or remove admin Gmail addresses (you can’t remove yourself or the last admin). |
@@ -62,6 +64,39 @@ Until a pin is set, the website shows a drawn map and “Get Directions” searc
 
 A full Google Maps link also works in the Coordinates box; short `maps.app.goo.gl` share links don’t (open the link
 and copy the coordinates instead).
+
+### Hero video
+The top of the homepage plays the shop’s own footage, muted and looping, with a pause button. It doesn’t play for
+visitors who ask for reduced motion or have data saver on: they see a still frame instead. Three files, all made from
+one landscape clip (ideally 8–15 s):
+
+| File | What it is |
+|---|---|
+| `public/videos/hero-720.mp4` | Desktop and tablets (1280 × 720, no sound) |
+| `public/videos/hero-480.mp4` | Phones (854 × 480, no sound) |
+| `public/images/hero-poster.jpg` | The clip’s first frame: shown while the video loads, and as the link preview image |
+
+To swap in a new clip, run these with [ffmpeg](https://ffmpeg.org/), then redeploy:
+```
+ffmpeg -i clip.mp4 -an -c:v libx264 -profile:v high -preset slow -crf 26 -pix_fmt yuv420p -movflags +faststart -vf "scale=1280:-2" public/videos/hero-720.mp4
+ffmpeg -i clip.mp4 -an -c:v libx264 -profile:v high -preset slow -crf 28 -pix_fmt yuv420p -movflags +faststart -vf "scale=-2:480" public/videos/hero-480.mp4
+ffmpeg -i clip.mp4 -frames:v 1 -q:v 4 public/images/hero-poster.jpg
+```
+Keep people roughly in the centre-left of the frame: the left edge fades into the headline on desktop.
+
+### Photos to replace
+Apart from the hero video, every photo the site shipped with is a **generated placeholder**, not the shop’s own work.
+Replace them with real photos from the shop as soon as you can — real work is what convinces new clients.
+
+| Where | How to replace | Best size |
+|---|---|---|
+| Services menu thumbnails | Admin → Services & prices → Edit → Image | Square-ish, ≥ 400 px |
+| “Our Work” gallery | Admin → Gallery: upload real cuts, then hide or delete `gallery-1…5` | Portrait or square, ≥ 1000 px |
+| Barber portraits and work | Admin → Barbers → Edit: portrait, photos and short videos | Portrait 800 × 1000 px |
+| Sample work video | Admin → Barbers: delete the “Sample video” item from each profile | — |
+
+Also worth filling in when you have them: Instagram / Facebook / TikTok links (Shop info — they appear in the
+footer, and Instagram also under “Our Work”), real barber names and bios, and service durations.
 
 ### Photo & video tips
 - Photos: JPG/PNG/WebP straight from a phone are fine — they’re resized to ~1600px in the browser before upload.

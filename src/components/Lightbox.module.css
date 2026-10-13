@@ -1,0 +1,16 @@
+.lightbox {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+}
+
+.lightbox::backdrop {
+  background: rgb(5 5 6 / 0.9);
+}

@@ -1,4 +1,4 @@
-import { useBookingLink } from '../booking/context'
+import { BOOKING_SECTION_ID } from '../booking/context'
 import { Button } from '../components/Button'
 import { Icon } from '../components/Icon'
 import { InfoItem } from '../components/InfoItem'
@@ -7,8 +7,9 @@ import { useShop } from '../content/hooks'
 import styles from './VisitUs.module.css'
 
 /**
- * Stylized dark street map (illustrative, not to scale). The street layer stretches to any box with
- * constant stroke widths; the pin and label are HTML so they keep their size at every breakpoint.
+ * Stylized dark street map (illustrative, not to scale), shown only until exact coordinates are set in /admin.
+ * The street layer stretches to any box with constant stroke widths; the pin and label are HTML so they keep
+ * their size at every breakpoint.
  */
 function MapIllustration() {
   return (
@@ -49,78 +50,66 @@ function locationPhrase(line1: string, line2: string) {
 }
 
 export function VisitUs() {
-  const bookLink = useBookingLink()
   const shop = useShop()
 
   return (
-    <section id="contact" className={styles.band} aria-labelledby="contact-title">
-      <div className={styles.content}>
-        <SectionHeading id="contact-title" size="sm" eyebrow="Get in Touch" title="Visit Us" />
-        <p className={styles.text}>
-          We’re located {locationPhrase(shop.address.line1, shop.address.line2)}. Walk-ins are always welcome, but
-          booking an appointment is recommended to avoid wait times.
-        </p>
+    <section id="contact" className={`section ${styles.band}`} aria-labelledby="contact-title">
+      <div className={`container ${styles.layout}`}>
+        <div className={`reveal ${styles.content}`}>
+          <SectionHeading id="contact-title" eyebrow="Visit us" title="Find the shop" />
+          <p className={styles.text}>
+            We’re {locationPhrase(shop.address.line1, shop.address.line2)}. Walk-ins are welcome; requesting a time
+            ahead helps you avoid a wait.
+          </p>
 
-        <div className={styles.info}>
-          <InfoItem icon="phone" value={shop.phone.display} caption="Call us" href={shop.phone.href} />
-          <InfoItem
-            icon="pin"
-            value={[shop.address.line2 ? `${shop.address.line1},` : shop.address.line1, shop.address.line2]}
-            caption="Our Location"
-          />
-          <InfoItem icon="clock" value={shop.hours.time} detail={shop.hours.days} caption="Opening Hours" />
+          <div className={styles.info}>
+            <InfoItem
+              icon="pin"
+              caption="Address"
+              value={[shop.address.line2 ? `${shop.address.line1},` : shop.address.line1, shop.address.line2]}
+            />
+            <InfoItem icon="clock" caption="Opening hours" value={shop.hours.time} detail={shop.hours.days} />
+            <InfoItem icon="phone" caption="Call us" value={shop.phone.display} href={shop.phone.href} />
+          </div>
+
+          <div className={styles.actions}>
+            <Button href={shop.directionsUrl} icon="navigate" target="_blank" rel="noopener noreferrer">
+              Get Directions<span className="visually-hidden"> (opens Google Maps in a new tab)</span>
+            </Button>
+            <Button href={`#${BOOKING_SECTION_ID}`} variant="secondary" icon="calendar">
+              Request a Time
+            </Button>
+          </div>
         </div>
 
-        <div className={styles.actions}>
-          <Button {...bookLink} size="sm" arrow>
-            Book Appointment
-          </Button>
-          <a href={shop.directionsUrl} target="_blank" rel="noopener noreferrer" className={styles.directions}>
-            <Icon name="pin" size={15} strokeWidth={1.7} className={styles.gold} />
-            Get Directions
-            <span className="visually-hidden"> (opens Google Maps navigation in a new tab)</span>
+        {shop.mapEmbedUrl ? (
+          // Exact pin: a real (darkened) Google Map
+          <div className={`${styles.map} ${styles.liveMap}`}>
+            <iframe
+              src={shop.mapEmbedUrl}
+              title="Map showing Noah Barbershop’s exact location"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className={styles.mapFrame}
+            />
+            <a href={shop.mapsUrl} target="_blank" rel="noopener noreferrer" className={styles.mapChip}>
+              Open in Google Maps
+              <Icon name="external" size={13} strokeWidth={1.8} />
+              <span className="visually-hidden"> (opens in a new tab)</span>
+            </a>
+          </div>
+        ) : (
+          // No coordinates yet: keep the drawn map rather than show a possibly wrong pin
+          <a
+            href={shop.directionsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.map}
+            aria-label="Map: Noah Barbershop. Opens Google Maps directions in a new tab"
+          >
+            <MapIllustration />
           </a>
-        </div>
-      </div>
-
-      {shop.mapEmbedUrl ? (
-        // Exact pin: a real (darkened) Google Map
-        <div className={`${styles.map} ${styles.liveMap}`}>
-          <iframe
-            src={shop.mapEmbedUrl}
-            title="Map showing Noah Barbershop’s exact location"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className={styles.mapFrame}
-          />
-          <a href={shop.mapsUrl} target="_blank" rel="noopener noreferrer" className={styles.mapChip}>
-            Open in Google Maps
-            <Icon name="external" size={13} strokeWidth={1.8} />
-            <span className="visually-hidden"> (opens in a new tab)</span>
-          </a>
-        </div>
-      ) : (
-        // No coordinates yet: keep the drawn map rather than show a possibly wrong pin
-        <a
-          href={shop.directionsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.map}
-          aria-label="Map: Noah Barbershop. Opens Google Maps directions in a new tab"
-        >
-          <MapIllustration />
-        </a>
-      )}
-
-      <div className={styles.storefront}>
-        <img
-          src="/images/storefront.jpg"
-          alt="Noah Barbershop storefront with gold signage, a barber pole and a sidewalk sign"
-          width={634}
-          height={428}
-          loading="lazy"
-          decoding="async"
-        />
+        )}
       </div>
     </section>
   )

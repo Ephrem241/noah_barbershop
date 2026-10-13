@@ -1,31 +1,33 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useBookingLink } from '../booking/context'
-import { useShop } from '../content/hooks'
+import { BOOKING_SECTION_ID } from '../booking/context'
 import { Button } from '../components/Button'
 import { Icon } from '../components/Icon'
 import { Logo } from '../components/Logo'
+import { openingSummary } from '../content/api'
+import { useShop } from '../content/hooks'
 import { navLinks } from '../data/site'
 import { useActiveSection } from '../hooks/useActiveSection'
 import { useScrolledPast } from '../hooks/useScrolledPast'
 import styles from './Navbar.module.css'
 
-const sectionIds = navLinks.map((link) => link.id)
+// Scrollspy targets in page order. The booking section has no nav link: tracking it keeps "Reviews" from staying
+// highlighted while the visitor is at the form.
+const sectionIds = ['home', ...navLinks.map((link) => link.id)].flatMap((id) =>
+  id === 'contact' ? [BOOKING_SECTION_ID, id] : [id],
+)
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const scrolled = useScrolledPast('home', 80)
+  const scrolled = useScrolledPast('home', 72)
   const active = useActiveSection(sectionIds, 'home')
   const toggleRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
+  const shop = useShop()
 
   const closeMenu = useCallback((restoreFocus = false) => {
     setMenuOpen(false)
     if (restoreFocus) toggleRef.current?.focus()
   }, [])
-
-  const bookLink = useBookingLink()
-  const shop = useShop()
-  const drawerBookLink = useBookingLink(undefined, () => closeMenu())
 
   // Drawer: lock page scroll, focus the first link, close on Escape, keep Tab inside.
   useEffect(() => {
@@ -62,7 +64,7 @@ export function Navbar() {
 
   // Close the drawer if the viewport grows past the mobile breakpoint.
   useEffect(() => {
-    const mq = window.matchMedia('(min-width: 900px)')
+    const mq = window.matchMedia('(min-width: 1024px)')
     const onChange = () => mq.matches && setMenuOpen(false)
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
@@ -73,9 +75,7 @@ export function Navbar() {
   return (
     <header className={headerClass}>
       <div className={`container ${styles.inner}`}>
-        <div className={styles.brand}>
-          <Logo onClick={() => closeMenu()} />
-        </div>
+        <Logo onClick={() => closeMenu()} />
 
         <nav aria-label="Primary" className={styles.nav}>
           <ul className={styles.links}>
@@ -94,8 +94,12 @@ export function Navbar() {
         </nav>
 
         <div className={styles.actions}>
-          <Button {...bookLink} variant="pill" icon="calendar" className={styles.cta}>
-            Book Appointment
+          <a href={shop.phone.href} className={styles.phone}>
+            <Icon name="phone" size={15} strokeWidth={1.7} />
+            {shop.phone.display}
+          </a>
+          <Button href={`#${BOOKING_SECTION_ID}`} size="sm" className={styles.cta} onClick={() => closeMenu()}>
+            Book Now
           </Button>
           <button
             ref={toggleRef}
@@ -137,13 +141,16 @@ export function Navbar() {
           </ul>
         </nav>
         <div className={styles.drawerFooter}>
-          <Button {...drawerBookLink} icon="calendar">
-            Book Appointment
+          <Button href={`#${BOOKING_SECTION_ID}`} icon="calendar" onClick={() => closeMenu()}>
+            Book Now
           </Button>
-          <a href={shop.phone.href} className={styles.drawerPhone}>
-            <Icon name="phone" size={16} className={styles.gold} />
-            {shop.phone.display}
-          </a>
+          <Button href={shop.phone.href} variant="secondary" icon="phone">
+            Call {shop.phone.display}
+          </Button>
+          <p className={styles.drawerHours}>
+            <Icon name="clock" size={15} strokeWidth={1.7} />
+            {openingSummary(shop.hours)}
+          </p>
         </div>
       </div>
     </header>

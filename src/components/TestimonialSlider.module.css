@@ -32,15 +32,15 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 26px 26px 22px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, #121416, var(--surface) 70%);
+  padding: 28px 28px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
 }
 
 .mark {
-  height: 30px;
-  color: var(--gold);
+  height: 34px;
+  color: var(--accent);
   font-family: var(--font-serif);
   font-size: 4rem;
   line-height: 0.9;
@@ -50,7 +50,7 @@
   flex: 1;
   margin-top: 12px;
   color: var(--text-body);
-  font-size: var(--fs-small);
+  font-size: var(--fs-body);
   line-height: 1.7;
 }
 
@@ -67,7 +67,7 @@
   flex: none;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--gold-line);
+  border: 1px solid var(--accent-line);
   border-radius: var(--radius-pill);
   object-fit: cover;
 }
@@ -77,7 +77,7 @@
   align-items: center;
   justify-content: center;
   background: var(--bg);
-  color: var(--gold);
+  color: var(--accent);
   font-family: var(--font-serif);
   font-size: 1rem;
   letter-spacing: 0.04em;
@@ -111,7 +111,7 @@
 }
 
 .starOn {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .starOff {
@@ -131,8 +131,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-pill);
@@ -146,8 +146,8 @@
 }
 
 .arrow:hover:not(:disabled) {
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .arrow:disabled {
@@ -161,8 +161,8 @@
 
 .dot {
   position: relative;
-  width: 20px;
-  height: 24px;
+  width: 22px;
+  height: 44px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -172,21 +172,21 @@
 .dot::before {
   content: '';
   position: absolute;
-  inset: 9px 7px;
+  inset: 19px 8px;
   border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.28);
+  background: var(--border-strong);
   transition:
     background-color var(--dur) var(--ease),
     inset var(--dur) var(--ease);
 }
 
 .dot:hover::before {
-  background: var(--gold);
+  background: var(--accent);
 }
 
 .dot[aria-current='true']::before {
-  inset: 9px 3px;
-  background: var(--gold);
+  inset: 19px 3px;
+  background: var(--accent);
 }
 
 @media (max-width: 1023px) {

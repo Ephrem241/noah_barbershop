@@ -1,60 +1,66 @@
-import { Button } from '../components/Button'
-import { Icon, type IconName } from '../components/Icon'
 import { SectionHeading } from '../components/SectionHeading'
 import { useShop } from '../content/hooks'
 import styles from './About.module.css'
 
+// How the shop works, in its own words — kept to what the services and client reviews support.
+const principles = [
+  {
+    title: 'Listen first',
+    text: 'A cut starts with a short consultation: the look you want, how you wear your hair and how much upkeep suits you.',
+  },
+  {
+    title: 'Detail in every line',
+    text: 'Clean fades, sharp line-ups and careful scissor work, finished properly before you leave the chair.',
+  },
+  {
+    title: 'A clean, welcoming shop',
+    text: 'A tidy, comfortable space and friendly staff: the thing our reviewers mention most.',
+  },
+]
+
 export function About() {
-  const shop = useShop()
-  const facts: { icon: IconName; text: string }[] = [
-    { icon: 'clock', text: `Open every day · ${shop.hours.time}` },
-    { icon: 'scissors', text: 'Walk-ins always welcome' },
-  ]
-  if (shop.tripadvisor) facts.push({ icon: 'star', text: `Rated ${shop.tripadvisor.rating.toFixed(1)} on Tripadvisor` })
+  const { tripadvisor } = useShop()
 
   return (
-    <section id="about" className={styles.band} aria-labelledby="about-title">
-      <div className={styles.photo}>
-        <img
-          src="/images/interior.jpg"
-          alt="Inside Noah Barbershop: leather sofa and chairs below the lit NOAH sign"
-          width={638}
-          height={422}
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
+    <section id="about" className="theme-ivory section" aria-labelledby="about-title">
+      <div className={`container ${styles.layout}`}>
+        <div className={`reveal ${styles.intro}`}>
+          <SectionHeading id="about-title" eyebrow="About Noah" title="Good cuts start with listening" />
+          <p className={styles.text}>
+            Noah Barbershop is a men’s barbershop near Edna Mall in Bole, Addis Ababa. Our approach is simple:
+            understand what you want, cut it with care, and keep the shop clean and welcoming while we do.
+          </p>
 
-      <div className={styles.content}>
-        <SectionHeading
-          id="about-title"
-          eyebrow="About Us"
-          title={
-            <>
-              The Barbershop
-              <br />
-              That Cares
-            </>
-          }
-        />
-        <p className={styles.text}>
-          Noah Barbershop is more than just a place for a haircut — it’s a lifestyle. We combine modern techniques with
-          timeless grooming traditions to give you the best version of yourself.
-        </p>
-        <ul className={styles.facts}>
-          {facts.map((fact) => (
-            <li key={fact.text}>
-              <span className={styles.factIcon} aria-hidden="true">
-                <Icon name={fact.icon} size={15} strokeWidth={1.7} />
+          <figure className={styles.quote}>
+            <blockquote>
+              <p>
+                “The shop is very clean, they use high-quality products, and they genuinely care about their clients.”
+              </p>
+            </blockquote>
+            <figcaption>
+              Yonatan A. ·{' '}
+              {tripadvisor ? (
+                <a href={tripadvisor.url} target="_blank" rel="noopener noreferrer">
+                  Tripadvisor review<span className="visually-hidden"> (opens in a new tab)</span>
+                </a>
+              ) : (
+                'Tripadvisor review'
+              )}
+            </figcaption>
+          </figure>
+        </div>
+
+        <ol className={styles.principles}>
+          {principles.map((p, i) => (
+            <li key={p.title} className="reveal">
+              <span className={styles.number} aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
               </span>
-              {fact.text}
+              <h3 className={styles.title}>{p.title}</h3>
+              <p className={styles.body}>{p.text}</p>
             </li>
           ))}
-        </ul>
-        {/* TODO: point at an About page once it exists */}
-        <Button href="#about" variant="secondary" size="sm" arrow className={styles.cta}>
-          Learn More
-        </Button>
+        </ol>
       </div>
     </section>
   )

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import { Icon } from '../../components/Icon'
+import { GALLERY_CATEGORIES } from '../../data/gallery'
 import type { Tables } from '../../lib/database.types'
 import { mediaUrl, removeMedia, uploadImage } from '../../lib/media'
 import { nextSortOrder, useReorder, useRows, useTableMutations } from '../data'
@@ -54,8 +55,8 @@ export function GalleryPage() {
         <div>
           <h1 className={styles.pageTitle}>Gallery</h1>
           <p className={styles.pageLead}>
-            “Signature Styles” on the homepage shows the first five visible photos ({visible} visible now). Portrait
-            photos look best.
+            “Our Work” on the homepage shows every visible photo ({visible} visible now), in this order. Square or
+            portrait photos look best; a category adds the photo to that filter.
           </p>
         </div>
         <div className={styles.uploadBar} style={{ marginBottom: 0 }}>
@@ -94,6 +95,20 @@ export function GalleryPage() {
                     if (alt !== item.alt) update.mutate({ id: item.id, values: { alt } }, { onError: (err) => toast(errorMessage(err), 'error') })
                   }}
                 />
+                <select
+                  value={item.category ?? ''}
+                  aria-label={`Category for photo ${i + 1}`}
+                  onChange={(e) =>
+                    update.mutate({ id: item.id, values: { category: e.target.value } }, { onError: (err) => toast(errorMessage(err), 'error') })
+                  }
+                >
+                  <option value="">No category</option>
+                  {GALLERY_CATEGORIES.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
                 <Toggle
                   label="Visible"
                   checked={item.is_active}

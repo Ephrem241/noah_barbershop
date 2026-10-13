@@ -48,7 +48,7 @@
 }
 
 .counter {
-  color: var(--gold);
+  color: var(--accent);
   font-weight: 600;
   letter-spacing: 0.06em;
 }
@@ -72,8 +72,8 @@
 }
 
 .button:hover {
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .close {

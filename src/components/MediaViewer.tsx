@@ -1,5 +1,5 @@
 import { useEffect, useRef, type MouseEvent } from 'react'
-import { Icon } from '../components/Icon'
+import { Icon } from './Icon'
 import type { WorkItem } from '../data/barbers'
 import styles from './MediaViewer.module.css'
 
@@ -8,7 +8,7 @@ type MediaViewerProps = {
   index: number
   label: string
   onIndexChange: (index: number) => void
-  /** Escape is handled by the parent <dialog>'s cancel event */
+  /** Escape is handled by the parent <dialog>'s cancel event (BookingDialog, Lightbox) */
   onClose: () => void
 }
 

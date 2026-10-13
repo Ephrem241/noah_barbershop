@@ -1,6 +1,6 @@
 import type { IconName } from '../components/Icon'
 import type { Barber, WorkItem } from '../data/barbers'
-import type { GalleryImage } from '../data/gallery'
+import { isGalleryCategory, type GalleryImage } from '../data/gallery'
 import { site, socials as fallbackSocials } from '../data/site'
 import type { Service } from '../data/services'
 import type { Testimonial } from '../data/testimonials'
@@ -34,7 +34,20 @@ export type ShopInfo = {
 
 const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '')}`
 
+/** "Open daily · 8:00 AM – 9:00 PM", or the shop's own day range when it isn't every day. */
+export function openingSummary(hours: ShopInfo['hours']) {
+  const everyDay = /mon\w*\s*[–-]\s*sun/i.test(hours.days)
+  return [everyDay ? 'Open daily' : hours.days, hours.time].filter(Boolean).join(' · ')
+}
+
 export const formatPrice = (etb: number, from: boolean) => `ETB ${etb.toLocaleString('en-US')}${from ? '+' : ''}`
+
+/** 45 → "45 min", 60 → "1 hr", 75 → "1 hr 15 min" */
+export function formatDuration(minutes: number) {
+  const h = Math.floor(minutes / 60)
+  const m = minutes % 60
+  return [h ? `${h} hr` : '', m ? `${m} min` : ''].filter(Boolean).join(' ')
+}
 
 export const fallbackShop: ShopInfo = {
   phone: site.phone,
@@ -85,7 +98,10 @@ export const toService = (row: Tables<'services'>): Service => ({
   id: row.id,
   title: row.title,
   description: row.description,
-  price: formatPrice(row.price_etb, row.price_is_from),
+  price: formatPrice(row.price_etb, false),
+  priceFrom: row.price_is_from,
+  // Before the duration migration runs the column is absent (undefined), so nothing is shown
+  duration: row.duration_minutes ? formatDuration(row.duration_minutes) : undefined,
   image: mediaUrl(row.image_path) ?? '/images/service-haircut.jpg',
   alt: row.title,
 })
@@ -103,7 +119,13 @@ export async function fetchGallery(): Promise<GalleryImage[]> {
     .eq('is_active', true)
     .order('sort_order')
   if (error) fail(error)
-  return (data ?? []).map((row) => ({ image: mediaUrl(row.path) ?? '', alt: row.alt })).filter((g) => g.image)
+  return (data ?? [])
+    .map((row) => ({
+      image: mediaUrl(row.path) ?? '',
+      alt: row.alt,
+      category: row.category && isGalleryCategory(row.category) ? row.category : undefined,
+    }))
+    .filter((g) => g.image)
 }
 
 export async function fetchTestimonials(): Promise<Testimonial[]> {

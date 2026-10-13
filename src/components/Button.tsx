@@ -2,7 +2,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'reac
 import { Icon, type IconName } from './Icon'
 import styles from './Button.module.css'
 
-type Variant = 'primary' | 'secondary' | 'pill'
+type Variant = 'primary' | 'secondary'
 type Size = 'sm' | 'md'
 
 type CommonProps = {

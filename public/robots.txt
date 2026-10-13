@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://noah-barbershop-9cv3.vercel.app/sitemap.xml

@@ -194,6 +194,7 @@ export type Database = {
       gallery_items: {
         Row: {
           alt: string
+          category: string
           created_at: string
           id: string
           is_active: boolean
@@ -203,6 +204,7 @@ export type Database = {
         }
         Insert: {
           alt?: string
+          category?: string
           created_at?: string
           id?: string
           is_active?: boolean
@@ -212,6 +214,7 @@ export type Database = {
         }
         Update: {
           alt?: string
+          category?: string
           created_at?: string
           id?: string
           is_active?: boolean
@@ -225,6 +228,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string
+          duration_minutes: number | null
           id: string
           image_path: string | null
           is_active: boolean
@@ -237,6 +241,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string
+          duration_minutes?: number | null
           id?: string
           image_path?: string | null
           is_active?: boolean
@@ -249,6 +254,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
+          duration_minutes?: number | null
           id?: string
           image_path?: string | null
           is_active?: boolean

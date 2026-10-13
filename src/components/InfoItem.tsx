@@ -18,16 +18,16 @@ export function InfoItem({ icon, value, detail, caption, href, className }: Info
   const content = (
     <>
       <span className={styles.ring}>
-        <Icon name={icon} size={13} strokeWidth={1.7} />
+        <Icon name={icon} size={16} strokeWidth={1.6} />
       </span>
       <span className={styles.text}>
+        <span className={styles.caption}>{caption}</span>
         {lines.map((line, i) => (
           <span key={i} className={styles.value}>
             {line}
           </span>
         ))}
         {detail ? <span className={styles.detail}>{detail}</span> : null}
-        <span className={styles.caption}>{caption}</span>
       </span>
     </>
   )

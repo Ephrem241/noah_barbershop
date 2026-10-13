@@ -1,19 +1,11 @@
 .heading {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-}
-
-.sm {
-  gap: 5px;
+  gap: 18px;
 }
 
 .title {
   font-size: var(--fs-h2);
-  line-height: 1.12;
-}
-
-.titleSm {
-  font-size: var(--fs-h2-sm);
-  line-height: 1.24;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }

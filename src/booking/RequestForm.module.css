@@ -1,4 +1,10 @@
-.wrap {
+/* Lays itself out by its own width (container query), so it fits both the dialog and the page section */
+.wrap,
+.done {
+  container-type: inline-size;
+}
+
+.dialog.wrap {
   max-width: 720px;
 }
 
@@ -8,7 +14,7 @@
 
 .title {
   margin-top: 12px;
-  font-size: var(--fs-h2);
+  font-size: var(--fs-h2-sm);
 }
 
 .title:focus {
@@ -23,16 +29,35 @@
   line-height: 1.6;
 }
 
-.link {
-  color: var(--gold);
+.lead strong {
+  color: var(--text);
   font-weight: 600;
+}
+
+.link {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.nowrap {
   white-space: nowrap;
 }
 
 .form {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px 18px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+@container (min-width: 520px) {
+  .form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 20px;
+  }
 }
 
 .full {
@@ -42,38 +67,85 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  color: var(--text-body);
+  gap: 7px;
+  min-width: 0;
+}
+
+.field label {
+  color: var(--text);
   font-size: var(--fs-caption);
-  font-weight: 500;
+  font-weight: 600;
+}
+
+.req {
+  color: var(--text-dim);
+  font-weight: 400;
 }
 
 .field input,
 .field select,
 .field textarea {
   width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
+  min-height: 48px;
+  padding: 11px 14px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: 1rem; /* 16px keeps iOS from zooming into the field */
   font-weight: 400;
-  color-scheme: dark;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 1;
 }
 
 .field textarea {
+  min-height: 96px;
   resize: vertical;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--accent-line);
 }
 
 .field input:focus-visible,
 .field select:focus-visible,
 .field textarea:focus-visible {
-  border-color: var(--gold);
-  outline: 2px solid rgb(212 167 102 / 0.35);
+  border-color: var(--accent);
+  outline: 2px solid var(--accent-wash);
   outline-offset: 0;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.field [aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.hint {
+  color: var(--text-dim);
+  font-size: var(--fs-caption);
+}
+
+.fieldError {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--danger);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.fieldError svg {
+  flex: none;
+  margin-top: 1px;
 }
 
 .honeypot {
@@ -85,11 +157,11 @@
 }
 
 .error {
-  padding: 10px 14px;
-  border: 1px solid rgb(229 57 53 / 0.5);
+  padding: 12px 14px;
+  border: 1px solid var(--danger-line);
   border-radius: var(--radius);
-  background: rgb(229 57 53 / 0.1);
-  color: #ffb4b0;
+  background: var(--danger-wash);
+  color: var(--text);
   font-size: var(--fs-small);
 }
 
@@ -98,12 +170,23 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 12px 20px;
-  margin-top: 4px;
+  margin-top: 6px;
+}
+
+.submit {
+  min-width: 190px;
+}
+
+@container (max-width: 519px) {
+  .submit {
+    width: 100%;
+  }
 }
 
 .small {
   color: var(--text-dim);
   font-size: var(--fs-caption);
+  line-height: 1.5;
 }
 
 .done {
@@ -114,23 +197,25 @@
   padding: 12px 0 8px;
 }
 
+.inline.done {
+  padding: 4px 0 0;
+}
+
+.done .small {
+  margin-top: 10px;
+}
+
 .doneIcon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border: 1px solid var(--gold-line);
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--accent-line);
   border-radius: var(--radius-pill);
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .done .actions {
   margin-top: 22px;
-}
-
-@media (max-width: 767px) {
-  .form {
-    grid-template-columns: 1fr;
-  }
 }

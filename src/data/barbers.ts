@@ -18,8 +18,8 @@
  *
  * Contact fields:
  *   phone     Shown on the profile and used for the Call button, e.g. '+251 94 668 8207'.
- *   telegram  Telegram username without "@" (preferred), or a phone number like '+251911223344'.
- *   whatsapp  Optional; defaults to `phone`.
+ *   telegram  Optional Telegram username without "@" (preferred) or phone number; no button when empty.
+ *   whatsapp  Optional WhatsApp number; no button when empty (the shop line takes calls only).
  */
 
 export type WorkItem =
@@ -62,7 +62,6 @@ export const barbers: Barber[] = [
     bio: 'Sample bio — replace with Ephrem’s story: how long he has been cutting, where he trained and the styles he loves. A Tripadvisor reviewer called his scissor technique “outstanding, very detailed, and professional.”',
     specialties: ['Scissor cuts', 'Skin fades', 'Beard design'],
     phone: '+251 94 668 8207',
-    telegram: '+251946688207',
     work: [
       { type: 'photo', src: '/images/gallery-3.jpg', alt: 'Skin fade with a curved part-line design' },
       sampleVideo,
@@ -82,7 +81,6 @@ export const barbers: Barber[] = [
     experience: '6 years',
     languages: ['Amharic', 'English'],
     phone: '+251 94 668 8207',
-    telegram: '+251946688207',
     work: [
       { type: 'photo', src: '/images/service-beard.jpg', alt: 'Shaped and lined-up full beard' },
       { type: 'photo', src: '/images/gallery-4.jpg', alt: 'Textured curls with a fade' },
@@ -101,7 +99,6 @@ export const barbers: Barber[] = [
     experience: '4 years',
     languages: ['Amharic', 'English', 'Afaan Oromo'],
     phone: '+251 94 668 8207',
-    telegram: '+251946688207',
     work: [
       { type: 'photo', src: '/images/service-fade.jpg', alt: 'Seamless taper fade' },
       { type: 'photo', src: '/images/service-scalp.jpg', alt: 'Scalp massage treatment' },

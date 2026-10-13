@@ -4,7 +4,7 @@ import { useBarbers, useServices, useShop } from '../content/hooks'
 import { BarberCard } from './BarberCard'
 import { BarberProfile } from './BarberProfile'
 import { useBooking } from './context'
-import { MediaViewer } from './MediaViewer'
+import { MediaViewer } from '../components/MediaViewer'
 import { RequestForm } from './RequestForm'
 import styles from './BookingDialog.module.css'
 
@@ -80,7 +80,7 @@ export function BookingDialog() {
         barbers={barbers}
         services={services}
         shop={shop}
-        initialBarberId={barber?.id ?? null}
+        prefill={barber ? { barberId: barber.id } : null}
         headingRef={headingRef}
         onClose={closeBooking}
       />
@@ -105,8 +105,8 @@ export function BookingDialog() {
             Choose Your Barber
           </h2>
           <p className={styles.lead}>
-            Pick a barber to see their work, then contact them directly by phone, Telegram or WhatsApp — or send us a
-            request and we’ll call you.
+            Pick a barber to see their work and call them directly, or send a request and we’ll call you to confirm a
+            time.
           </p>
         </header>
         <ul className={styles.grid} aria-busy={barbersLoading}>

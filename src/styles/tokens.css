@@ -1,62 +1,84 @@
 /*
  * Design tokens — the single source of truth for colors, type, shape and layout.
- * Values are measured from docs/design/mockup.png (a 1440px design shown at 1024px,
- * so mockup px × 1.406 = CSS px at a 1440px viewport).
+ *
+ * The page is dark (charcoal) by default; content bands switch to warm ivory with the `.theme-ivory` /
+ * `.theme-cream` classes (global.css), which re-map the same token names. Components only read tokens, so
+ * they work on either background. Text/background pairs are checked for WCAG AA (≥ 4.5:1).
  */
 :root {
-  /* Colors */
-  --bg: #0a0b0b; /* page background */
-  --bg-alt: #101112; /* alternate bands (features strip) */
-  --bg-raised: #0d0e0e; /* gallery band, a hair lighter than the page */
-  --bg-deep: #060707; /* footer */
-  --surface: #16181a; /* cards */
-  --surface-map: #161b21; /* map panel (slightly blue, like dark map tiles) */
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
+  /* Palette */
+  --ink: #0c0b0a; /* footer, deepest band */
+  --charcoal: #141311; /* dark page background */
+  --charcoal-2: #1b1a17; /* raised dark bands */
+  --charcoal-3: #23211d; /* dark cards */
+  --ivory: #f6f1e7;
+  --ivory-2: #fbf8f2; /* cards on ivory */
+  --cream: #ece4d4;
+  --champagne: #cfae78; /* accent on dark */
+  --champagne-hi: #dcc08f;
+  --bronze: #7a5626; /* accent text on ivory / cream */
 
-  --gold: #d4a766; /* accent text, icons, prices, arrows */
-  --gold-btn: #dfae73; /* filled buttons */
-  --gold-btn-hover: #e9bf88;
-  --gold-line: rgba(212, 167, 102, 0.72); /* thin gold outlines (icon rings, secondary buttons) */
-  --gold-hairline: rgba(212, 167, 102, 0.12); /* warm 1px section edge */
+  /* Semantic colors (dark theme) */
+  --bg: var(--charcoal);
+  --bg-alt: var(--charcoal-2);
+  --bg-deep: var(--ink);
+  --surface: var(--charcoal-3);
+  --surface-map: #191c1f;
+  --border: rgb(244 239 230 / 0.09);
+  --border-strong: rgb(244 239 230 / 0.18);
 
-  --text: #ffffff; /* headings */
-  --text-body: #d2d2d2; /* hero / emphasized body copy */
-  --text-muted: #b5b5b5; /* body copy */
-  --text-dim: #8a8a8a; /* small captions */
-  --text-on-gold: #1a1a1a;
+  --accent: var(--champagne); /* accent text, icons, prices, active states */
+  --accent-line: rgb(207 174 120 / 0.55); /* thin accent outlines */
+  --accent-wash: rgb(207 174 120 / 0.1); /* hover fills */
 
-  --pin: #e53935;
+  --text: #f4efe6; /* headings */
+  --text-body: #d9d3c8; /* emphasized body copy */
+  --text-muted: #b3ac9f; /* body copy */
+  --text-dim: #8f887c; /* captions */
+
+  --btn-bg: var(--champagne);
+  --btn-bg-hover: var(--champagne-hi);
+  --btn-fg: #17140f;
+
+  --focus: var(--champagne);
+  --danger: #ff9c94;
+  --danger-line: rgb(229 57 53 / 0.55);
+  --danger-wash: rgb(229 57 53 / 0.1);
+  --shadow: 0 18px 40px -24px rgb(0 0 0 / 0.55);
+
+  /* Legacy names (admin panel + older modules) */
+  --gold: var(--accent);
+  --gold-btn: var(--btn-bg);
+  --gold-btn-hover: var(--btn-bg-hover);
+  --gold-line: var(--accent-line);
+  --text-on-gold: var(--btn-fg);
 
   /* Typography */
-  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
-  --fs-h1: clamp(2.5rem, 1.75rem + 2.1vw, 3.1875rem); /* 40 → 51px */
-  --fs-h2: clamp(1.75rem, 1.5rem + 0.6vw, 2rem); /* 28 → 32px */
-  --fs-h2-sm: clamp(1.5rem, 1.3rem + 0.45vw, 1.71875rem); /* 24 → 27.5px (about / testimonials) */
-  --fs-h3: 1rem; /* 16px — feature titles */
-  --fs-card-title: 0.96875rem; /* 15.5px */
-  --fs-lead: 0.95rem; /* 15.2px — hero paragraph */
-  --fs-body: 0.875rem; /* 14px */
-  --fs-small: 0.8125rem; /* 13px — section copy */
-  --fs-caption: 0.75rem; /* 12px */
-  --fs-eyebrow: 0.6875rem; /* 11px */
+  --fs-display: clamp(2.6rem, 1.6rem + 4.2vw, 4.75rem); /* hero */
+  --fs-h2: clamp(2rem, 1.45rem + 1.9vw, 3rem); /* 32 → 48px */
+  --fs-h2-sm: clamp(1.75rem, 1.4rem + 1.1vw, 2.25rem);
+  --fs-lead: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --fs-body: 0.9375rem; /* 15px */
+  --fs-small: 0.875rem; /* 14px */
+  --fs-caption: 0.8125rem; /* 13px */
+  --fs-eyebrow: 0.75rem; /* 12px */
 
-  --tracking-eyebrow: 0.16em;
+  --tracking-eyebrow: 0.18em;
 
   /* Shape */
-  --radius-sm: 3px;
+  --radius-sm: 2px;
   --radius: 4px;
   --radius-lg: 6px;
   --radius-pill: 999px;
 
   /* Layout */
-  --container: 1216px;
-  --gutter: 24px;
-  --inset: 44px; /* hero / nav / features sit 44px further in than the main grid */
-  --nav-h: 76px;
-  --section-pad: 40px;
+  --container: 1200px;
+  --gutter: 32px;
+  --nav-h: 72px;
+  --section-pad: clamp(72px, 5vw + 40px, 120px);
 
   /* Motion */
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -66,8 +88,6 @@
 @media (max-width: 767px) {
   :root {
     --gutter: 16px;
-    --inset: 0px;
     --nav-h: 64px;
-    --section-pad: 48px;
   }
 }

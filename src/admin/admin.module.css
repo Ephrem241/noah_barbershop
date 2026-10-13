@@ -465,7 +465,8 @@ button.pill:disabled {
   padding: 10px;
 }
 
-.mediaBody input {
+.mediaBody input,
+.mediaBody select {
   width: 100%;
   min-height: 34px;
   padding: 6px 8px;
@@ -477,7 +478,8 @@ button.pill:disabled {
   font-size: 0.8125rem;
 }
 
-.mediaBody input:focus-visible {
+.mediaBody input:focus-visible,
+.mediaBody select:focus-visible {
   border-color: var(--gold);
   outline: none;
 }

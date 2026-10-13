@@ -1,0 +1,33 @@
+.bar {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 40;
+  display: none;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: rgb(20 19 17 / 0.97);
+  transform: translateY(110%);
+  transition: transform 260ms var(--ease);
+}
+
+.visible {
+  transform: none;
+}
+
+.book {
+  width: 100%;
+}
+
+@media (max-width: 899px) {
+  .bar {
+    display: grid;
+  }
+}
+
+/* Out of the way while the menu drawer or a dialog is open */
+:global(body.scroll-locked) .bar,
+:global(body.dialog-open) .bar {
+  display: none;
+}

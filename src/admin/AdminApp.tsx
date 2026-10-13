@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AdminLayout } from './AdminLayout'
 import { AuthGate } from './AuthGate'
@@ -13,6 +14,13 @@ import { TestimonialsPage } from './pages/TestimonialsPage'
 import { FeedbackProvider } from './ui/FeedbackProvider'
 
 export default function AdminApp() {
+  // The admin shares index.html with the public site; keep its pages out of search results
+  useEffect(() => {
+    const meta = Object.assign(document.createElement('meta'), { name: 'robots', content: 'noindex, nofollow' })
+    document.head.append(meta)
+    return () => meta.remove()
+  }, [])
+
   return (
     <FeedbackProvider>
       <AuthGate>

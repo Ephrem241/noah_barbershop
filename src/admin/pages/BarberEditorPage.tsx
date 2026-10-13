@@ -135,14 +135,14 @@ function BarberForm({ initial, isNew }: { initial: Barber; isNew: boolean }) {
           label="Telegram"
           value={form.telegram}
           placeholder="username or +2519…"
-          hint="Username works best; a phone number only works if they allow it in Telegram privacy settings."
+          hint="Leave empty to hide the Telegram button. A username works best; a phone number only works if they allow it in Telegram privacy settings."
           onChange={(e) => set('telegram', e.target.value)}
         />
         <TextField
           label="WhatsApp"
           value={form.whatsapp}
-          placeholder="Same as phone"
-          hint="Leave empty to use the phone number."
+          placeholder="+2519…"
+          hint="Only if this number uses WhatsApp. Leave empty to hide the WhatsApp button."
           onChange={(e) => set('whatsapp', e.target.value)}
         />
         <div className={styles.stack}>

@@ -11,10 +11,10 @@ export function Testimonials() {
   if (!isLoading && testimonials.length === 0) return null
 
   return (
-    <section id="reviews" className={styles.section} aria-labelledby="reviews-title">
+    <section id="reviews" className={`section ${styles.section}`} aria-labelledby="reviews-title">
       <div className="container">
-        <div className={styles.head}>
-          <SectionHeading id="reviews-title" eyebrow="Testimonials" title="What Our Clients Say" className={styles.heading} />
+        <div className={`reveal ${styles.head}`}>
+          <SectionHeading id="reviews-title" eyebrow="Client reviews" title="What clients say" />
           {tripadvisor ? (
             <a href={tripadvisor.url} target="_blank" rel="noopener noreferrer" className={styles.badge}>
               <span className={styles.stars} aria-hidden="true">

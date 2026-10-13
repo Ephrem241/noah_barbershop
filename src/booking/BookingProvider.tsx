@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useBarbers } from '../content/hooks'
 import { BookingDialog } from './BookingDialog'
-import { BookingContext, bookingHash, parseBookingHash, type BookingRoute } from './context'
+import { BookingContext, bookingHash, parseBookingHash, type BookingRoute, type RequestPrefill } from './context'
 
 /*
  * Every dialog step we push carries { bookingDepth } in history.state, so the browser Back button walks
@@ -87,9 +87,15 @@ export function BookingProvider({ children }: { children: ReactNode }) {
     else window.history.replaceState(null, '', pageUrl())
   }, [])
 
+  const [prefill, setPrefill] = useState<RequestPrefill | null>(null)
+  const prefillRequest = useCallback(
+    (values: Omit<RequestPrefill, 'version'>) => setPrefill((p) => ({ ...values, version: (p?.version ?? 0) + 1 })),
+    [],
+  )
+
   const value = useMemo(
-    () => ({ route, openBooking, showBarber, showRequest, goBack, closeBooking }),
-    [route, openBooking, showBarber, showRequest, goBack, closeBooking],
+    () => ({ route, openBooking, showBarber, showRequest, goBack, closeBooking, prefill, prefillRequest }),
+    [route, openBooking, showBarber, showRequest, goBack, closeBooking, prefill, prefillRequest],
   )
 
   return (

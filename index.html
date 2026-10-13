@@ -2,30 +2,75 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Noah Barbershop — Premium Men's Grooming in Addis Ababa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Noah Barbershop – Haircuts &amp; Fades in Bole, Addis Ababa</title>
     <meta
       name="description"
-      content="Precise fades, premium care and master styling at Noah Barbershop near Edna Mall, Bole, Addis Ababa. Open daily 8:00 AM – 9:00 PM. Walk-ins welcome."
+      content="Barbershop near Edna Mall, Bole, Addis Ababa: haircuts, skin fades, beard trims and hot towel shaves from ETB 250. Open daily 8 AM–9 PM. Call +251 94 668 8207."
     />
-    <meta name="theme-color" content="#0E0E0E" />
+    <!-- Update the canonical/og URLs if the site moves to a custom domain -->
+    <link rel="canonical" href="https://noah-barbershop-9cv3.vercel.app/" />
+    <meta name="theme-color" content="#141311" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Noah Barbershop — Addis Ababa" />
+    <meta property="og:site_name" content="Noah Barbershop" />
+    <meta property="og:url" content="https://noah-barbershop-9cv3.vercel.app/" />
+    <meta property="og:title" content="Noah Barbershop – Haircuts & Fades in Bole, Addis Ababa" />
     <meta
       property="og:description"
-      content="Precise fades, premium care and master styling. Open daily 8:00 AM – 9:00 PM."
+      content="Haircuts, skin fades, beard trims and shaves near Edna Mall, Bole. Open daily 8 AM–9 PM. Request an appointment online."
     />
-    <meta property="og:image" content="/images/hero.jpg" />
+    <meta property="og:image" content="https://noah-barbershop-9cv3.vercel.app/images/hero-poster.jpg" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="720" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!--
+      Local business details for search engines. Only verified facts (they match the shop settings in /admin):
+      keep them in sync if the phone, address, hours or prices change. No rating markup on purpose — the rating
+      comes from Tripadvisor, and Google doesn't allow third-party ratings in a business's own markup.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BarberShop",
+        "@id": "https://noah-barbershop-9cv3.vercel.app/#barbershop",
+        "name": "Noah Barbershop",
+        "url": "https://noah-barbershop-9cv3.vercel.app/",
+        "telephone": "+251946688207",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Near Edna Mall, Bole",
+          "addressLocality": "Addis Ababa",
+          "addressCountry": "ET"
+        },
+        "geo": { "@type": "GeoCoordinates", "latitude": 8.993932, "longitude": 38.78472 },
+        "hasMap": "https://www.google.com/maps/search/?api=1&query=8.993932,38.78472&query_place_id=ChIJfcHfGEGFSxYRQznllYj100Q",
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "08:00",
+            "closes": "21:00"
+          }
+        ],
+        "priceRange": "ETB 250–600",
+        "currenciesAccepted": "ETB",
+        "sameAs": [
+          "https://www.tripadvisor.com/Attraction_Review-g293791-d34039775-Reviews-Noah_barber_shop-Addis_Ababa.html"
+        ]
+      }
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Playfair+Display:wght@500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..600,0,0&display=swap"
     />
-    <link rel="preload" as="image" href="/images/hero.jpg" fetchpriority="high" />
+    <!-- The hero video's poster is the first thing painted -->
+    <link rel="preload" as="image" href="/images/hero-poster.jpg" fetchpriority="high" />
   </head>
   <body>
     <div id="root"></div>

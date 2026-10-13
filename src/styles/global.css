@@ -7,8 +7,17 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  color-scheme: dark;
   /* Keep the layout from shifting when a dialog locks page scrolling */
   scrollbar-gutter: stable;
+  /* Anchors and focused fields stay clear of the fixed navbar and the mobile booking bar */
+  scroll-padding-top: var(--nav-h);
+}
+
+@media (max-width: 899px) {
+  html {
+    scroll-padding-bottom: 88px;
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -40,11 +49,15 @@ h3,
 p,
 figure,
 blockquote,
-ul {
+ul,
+ol,
+dl,
+dd {
   margin: 0;
 }
 
-ul {
+ul,
+ol {
   padding: 0;
   list-style: none;
 }
@@ -55,11 +68,14 @@ h3 {
   color: var(--text);
   font-family: var(--font-serif);
   font-weight: 500;
-  line-height: 1.15;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
 }
 
 img,
-svg {
+svg,
+video {
   display: block;
   max-width: 100%;
 }
@@ -81,14 +97,61 @@ main[id] {
 }
 
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--focus);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
 ::selection {
-  background: var(--gold);
-  color: var(--text-on-gold);
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ---------- Light content bands ----------
+   Same token names, warm ivory values: components adapt without their own light variants. */
+.theme-ivory,
+.theme-cream {
+  color-scheme: light;
+  --bg: var(--ivory);
+  --bg-alt: var(--cream);
+  --surface: var(--ivory-2);
+  --border: rgb(26 24 20 / 0.12);
+  --border-strong: rgb(26 24 20 / 0.24);
+
+  --accent: var(--bronze);
+  --accent-line: rgb(122 86 38 / 0.5);
+  --accent-wash: rgb(122 86 38 / 0.08);
+
+  --text: #1a1814;
+  --text-body: #35312a;
+  --text-muted: #5a5348;
+  --text-dim: #6a6256;
+
+  --btn-bg: #1a1814;
+  --btn-bg-hover: #35312a;
+  --btn-fg: var(--ivory);
+
+  --focus: var(--bronze);
+  --danger: #a3261f;
+  --danger-line: rgb(163 38 31 / 0.45);
+  --danger-wash: rgb(163 38 31 / 0.07);
+  --shadow: 0 18px 40px -26px rgb(60 44 20 / 0.35);
+  --skeleton-hi: #fffdf9;
+
+  /* Aliases resolve where they're declared, so they're re-declared here to follow the light values */
+  --gold: var(--accent);
+  --gold-btn: var(--btn-bg);
+  --gold-btn-hover: var(--btn-bg-hover);
+  --gold-line: var(--accent-line);
+  --text-on-gold: var(--btn-fg);
+
+  background: var(--bg);
+  color: var(--text-muted);
+}
+
+.theme-cream {
+  --bg: var(--cream);
+  --surface: var(--ivory);
 }
 
 /* Utilities */
@@ -99,15 +162,30 @@ main[id] {
   padding-inline: var(--gutter);
 }
 
+.section {
+  padding-block: var(--section-pad);
+}
+
 .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   margin: 0;
-  color: var(--gold);
+  color: var(--accent);
   font-family: var(--font-sans);
   font-size: var(--fs-eyebrow);
   font-weight: 600;
   letter-spacing: var(--tracking-eyebrow);
   line-height: 1.2;
   text-transform: uppercase;
+}
+
+/* Short rule before eyebrows — the site's recurring editorial mark */
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: currentColor;
 }
 
 /* Blank dark screen while the admin chunk / session loads */
@@ -118,7 +196,7 @@ main[id] {
 
 /* Loading placeholder for live content */
 .skeleton {
-  background: linear-gradient(100deg, var(--surface) 30%, #1d2023 50%, var(--surface) 70%);
+  background: linear-gradient(100deg, var(--surface) 30%, var(--skeleton-hi, #2b2925) 50%, var(--surface) 70%);
   background-size: 300% 100%;
 }
 
@@ -134,6 +212,24 @@ main[id] {
   }
   to {
     background-position: 0 0;
+  }
+}
+
+/* Subtle entrance as blocks scroll into view: CSS-only, skipped where unsupported or motion is reduced */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
   }
 }
 
@@ -156,8 +252,8 @@ main[id] {
   z-index: 100;
   padding: 10px 16px;
   border-radius: var(--radius);
-  background: var(--gold-btn);
-  color: var(--text-on-gold);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
   font-weight: 600;
   transform: translateY(-200%);
 }

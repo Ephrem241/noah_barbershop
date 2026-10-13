@@ -12,10 +12,9 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background:
-    radial-gradient(120% 90% at 50% 0%, rgba(212, 167, 102, 0.16), transparent 60%),
-    linear-gradient(180deg, #1b1d20, var(--surface));
-  color: var(--gold);
+  /* Stays dark (like a photo) on ivory sections too */
+  background: linear-gradient(180deg, var(--charcoal-3), var(--charcoal));
+  color: var(--champagne);
 }
 
 .crown {

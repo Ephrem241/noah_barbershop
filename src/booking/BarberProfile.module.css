@@ -22,9 +22,9 @@
 .tag {
   margin-bottom: 14px;
   padding: 3px 10px;
-  border: 1px solid var(--gold-line);
+  border: 1px solid var(--accent-line);
   border-radius: var(--radius-pill);
-  color: var(--gold);
+  color: var(--accent);
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -90,9 +90,9 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  border: 1px solid var(--gold-line);
+  border: 1px solid var(--accent-line);
   border-radius: var(--radius-pill);
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .number {
@@ -109,7 +109,7 @@
 }
 
 .phone:hover .number {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .actions {
@@ -134,11 +134,11 @@
 }
 
 .request svg {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .request:hover {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 /* Work */
@@ -195,7 +195,7 @@
 }
 
 .tile:hover {
-  border-color: var(--gold);
+  border-color: var(--accent);
 }
 
 .play {

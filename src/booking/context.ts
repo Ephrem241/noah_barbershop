@@ -1,4 +1,4 @@
-import { createContext, useContext, type MouseEvent } from 'react'
+import { createContext, useContext } from 'react'
 
 /**
  * Booking dialog state, mirrored in the URL:
@@ -9,6 +9,9 @@ import { createContext, useContext, type MouseEvent } from 'react'
  */
 export type BookingRoute = { open: false } | { open: true; barberId: string | null; request: boolean }
 
+/** Choices handed to the on-page request form (#booking); `version` changes on every hand-off. */
+export type RequestPrefill = { serviceId?: string; barberId?: string; version: number }
+
 export type BookingContextValue = {
   route: BookingRoute
   openBooking: (barberId?: string) => void
@@ -17,9 +20,15 @@ export type BookingContextValue = {
   /** Back to the previous dialog view (profile → list, request → profile or list) */
   goBack: () => void
   closeBooking: () => void
+  prefill: RequestPrefill | null
+  /** Pre-select a service or barber in the on-page request form (the caller's #booking link does the scrolling) */
+  prefillRequest: (values: Omit<RequestPrefill, 'version'>) => void
 }
 
 export const BookingContext = createContext<BookingContextValue | null>(null)
+
+/** Id of the on-page booking section. Not "#book…": that prefix belongs to the dialog routes above. */
+export const BOOKING_SECTION_ID = 'booking'
 
 export const bookingHash = (barberId?: string | null, request = false) =>
   `#book${barberId ? `/${barberId}` : ''}${request ? '/request' : ''}`
@@ -35,21 +44,4 @@ export function useBooking() {
   const ctx = useContext(BookingContext)
   if (!ctx) throw new Error('useBooking must be used inside <BookingProvider>')
   return ctx
-}
-
-/**
- * Props for a link that opens the booking dialog. Plain clicks open it in place; ctrl/⌘/middle-clicks are
- * left to the browser, which opens the shareable #book link in a new tab.
- */
-export function useBookingLink(barberId?: string, onOpen?: () => void) {
-  const { openBooking } = useBooking()
-  return {
-    href: bookingHash(barberId),
-    onClick: (e: MouseEvent<HTMLAnchorElement>) => {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
-      e.preventDefault()
-      onOpen?.()
-      openBooking(barberId)
-    },
-  }
 }

@@ -1,54 +1,116 @@
-import { useBookingLink } from '../booking/context'
+import { useEffect, useRef, useState } from 'react'
+import { BOOKING_SECTION_ID } from '../booking/context'
 import { Button } from '../components/Button'
+import { Icon } from '../components/Icon'
+import { openingSummary } from '../content/api'
+import { useShop } from '../content/hooks'
 import styles from './Hero.module.css'
 
+type NavigatorWithConnection = Navigator & { connection?: { saveData?: boolean } }
+
 export function Hero() {
-  const bookLink = useBookingLink()
+  const shop = useShop()
+  const { tripadvisor } = shop
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [playing, setPlaying] = useState(false)
+
+  // Background footage plays only when motion is welcome and the visitor isn't saving data; otherwise the poster
+  // stays and, with preload="none", no video is downloaded at all.
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const saveData = (navigator as NavigatorWithConnection).connection?.saveData
+    if (reducedMotion || saveData) return
+    video.muted = true
+    video.play().catch(() => {}) // autoplay blocked: the poster stays
+  }, [])
+
+  const togglePlayback = () => {
+    const video = videoRef.current
+    if (!video) return
+    if (video.paused) video.play().catch(() => {})
+    else video.pause()
+  }
 
   return (
     <section id="home" className={styles.hero} aria-labelledby="hero-title">
-      <img
-        className={styles.image}
-        src="/images/hero.jpg"
-        alt="A barber in a leather apron giving a client a precise skin fade"
-        width={1248}
-        height={532}
-        fetchPriority="high"
-        decoding="async"
-      />
-      <div className={styles.overlay} aria-hidden="true" />
+      <div className={styles.media}>
+        {/* Shop footage; to replace it, see "Hero video" in docs/ADMIN_SETUP.md */}
+        <video
+          ref={videoRef}
+          className={styles.image}
+          poster="/images/hero-poster.jpg"
+          muted
+          loop
+          playsInline
+          preload="none"
+          aria-hidden="true"
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+        >
+          <source src="/videos/hero-480.mp4" type="video/mp4" media="(max-width: 767px)" />
+          <source src="/videos/hero-720.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      <button
+        type="button"
+        className={styles.playback}
+        aria-label={playing ? 'Pause background video' : 'Play background video'}
+        onClick={togglePlayback}
+      >
+        <Icon name={playing ? 'pause' : 'play'} size={16} />
+      </button>
 
       <div className={`container ${styles.inner}`}>
         <div className={styles.content}>
-          <p className={`eyebrow ${styles.eyebrow}`}>Noah Barbershop</p>
+          <p className="eyebrow">Barbershop · Bole, Addis Ababa</p>
           <h1 id="hero-title" className={styles.title}>
-            Precise Fades.
-            <br />
-            Premium Care.
-            <br />
-            <span className={styles.accent}>Master Styling.</span>
+            <span className={styles.line}>Sharp cuts.</span> <span className={styles.line}>Clean fades.</span>{' '}
+            <span className={`${styles.line} ${styles.accent}`}>Real care.</span>
           </h1>
           <p className={styles.lead}>
-            Discover the peak of modern men’s grooming at Addis Ababa’s premier barbershop. Your style is our
-            signature statement.
+            A clean, welcoming barbershop near Edna Mall. Tell us the look you want and we’ll take the time to get it
+            right.
           </p>
           <div className={styles.actions}>
-            <Button {...bookLink} icon="calendar">
-              Book Your Chair Now
+            <Button href={`#${BOOKING_SECTION_ID}`} icon="calendar">
+              Book Your Cut
             </Button>
-            <Button href="#services" variant="secondary" arrow>
-              View Services
+            <Button href={shop.directionsUrl} variant="secondary" icon="navigate" target="_blank" rel="noopener noreferrer">
+              Get Directions<span className="visually-hidden"> (opens Google Maps in a new tab)</span>
             </Button>
           </div>
+
+          <ul className={styles.meta}>
+            {tripadvisor ? (
+              <li>
+                <a href={tripadvisor.url} target="_blank" rel="noopener noreferrer" className={styles.rating}>
+                  <span className={styles.stars} aria-hidden="true">
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <Icon key={i} name="star" size={13} />
+                    ))}
+                  </span>
+                  <span>
+                    <strong>{tripadvisor.rating.toFixed(1)}</strong>
+                    {tripadvisor.count ? ` · ${tripadvisor.count} Tripadvisor reviews` : ' on Tripadvisor'}
+                  </span>
+                  <span className="visually-hidden"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ) : null}
+            <li>
+              <Icon name="clock" size={15} strokeWidth={1.7} className={styles.metaIcon} />
+              {openingSummary(shop.hours)}
+            </li>
+            <li>
+              <Icon name="scissors" size={15} strokeWidth={1.6} className={styles.metaIcon} />
+              Walk-ins welcome
+            </li>
+          </ul>
         </div>
       </div>
-
-      <a href="#why-noah" className={styles.scroll}>
-        <span>Scroll Down</span>
-        <svg width="9" height="46" viewBox="0 0 9 46" fill="none" stroke="currentColor" aria-hidden="true">
-          <path d="M4.5 0v44M1 40.5l3.5 4 3.5-4" strokeWidth="1" />
-        </svg>
-      </a>
     </section>
   )
 }

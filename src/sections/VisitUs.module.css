@@ -1,74 +1,48 @@
-/* Full-bleed band: text (aligned to the page container) | map | storefront photo bleeding to the right edge */
 .band {
+  background: var(--bg-alt);
+}
+
+.layout {
   display: grid;
-  /* The text keeps room for the one-line info row; the storefront photo is what shrinks */
-  grid-template-columns: minmax(510px, 1fr) minmax(280px, 320px) minmax(0, 465px);
-  column-gap: 15px;
-  /* Align the text with the page container; % (not vw) so the scrollbar is excluded */
-  padding-left: max(var(--gutter), calc((100% - var(--container)) / 2));
-  border-top: 1px solid var(--border);
-  background: var(--bg-raised);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 48px 72px;
+  align-items: stretch;
 }
 
 .content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
-  padding: 29px 20px 26px 0;
 }
 
 .text {
-  max-width: 285px;
-  margin-top: 9px;
-  color: var(--text-muted);
-  font-size: var(--fs-caption);
-  line-height: 1.45;
+  max-width: 42ch;
+  margin-top: 22px;
+  color: var(--text-body);
+  font-size: var(--fs-lead);
+  line-height: 1.6;
 }
 
 .info {
   display: flex;
-  align-items: flex-start;
-  margin-top: 18px;
-}
-
-.info > * + * {
-  margin-left: 10px;
-  padding-left: 10px;
-  border-left: 1px solid var(--border);
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  margin-top: 34px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 24px;
-  margin-top: 14px;
-}
-
-.directions {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  color: var(--text);
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: color var(--dur) var(--ease);
-}
-
-.directions:hover {
-  color: var(--gold);
-}
-
-.gold {
-  color: var(--gold);
+  gap: 12px;
+  margin-top: 36px;
 }
 
 .map {
   position: relative;
-  align-self: center;
-  height: 248px;
+  min-height: 420px;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -77,7 +51,7 @@
 }
 
 .map:hover {
-  border-color: var(--gold-line);
+  border-color: var(--accent-line);
 }
 
 /* Real map (exact pin) */
@@ -86,6 +60,8 @@
 }
 
 .mapFrame {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -97,39 +73,41 @@
 /* Top-right: Google's controls and required attribution live along the bottom edge */
 .mapChip {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 32px;
-  padding: 0 12px;
-  border: 1px solid var(--gold-line);
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--accent-line);
   border-radius: var(--radius-pill);
-  background: rgb(10 11 11 / 0.88);
+  background: rgb(12 11 10 / 0.88);
   color: var(--text);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: var(--fs-caption);
+  font-weight: 600;
   transition:
     border-color var(--dur) var(--ease),
     color var(--dur) var(--ease);
 }
 
 .mapChip svg {
-  color: var(--gold);
+  color: var(--accent);
 }
 
 .mapChip:hover {
-  border-color: var(--gold);
-  color: var(--gold);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .mapSvg {
   width: 100%;
   height: 100%;
+  position: absolute;
+  inset: 0;
 }
 
-/* Pin circle centered at (41%, 40%) of the map, like the mockup */
+/* Pin circle centered at (41%, 40%) of the map */
 .pin {
   position: absolute;
   top: 40%;
@@ -143,100 +121,25 @@
 .pinLabel {
   margin-top: 4px;
   color: var(--text);
-  font-size: 0.71875rem;
+  font-size: var(--fs-caption);
   font-weight: 600;
   white-space: nowrap;
 }
 
-.storefront {
-  min-height: 305px;
-}
-
-.storefront img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Narrow desktop: text | map, then the storefront as a full-bleed strip.
-   The first column reproduces the container offset so the text still lines up with other sections. */
-@media (min-width: 1024px) and (max-width: 1199px) {
-  .band {
-    grid-template-columns: max(var(--gutter), calc((100% - var(--container)) / 2)) minmax(0, 1fr) minmax(300px, 380px);
-    column-gap: 0;
-    padding-left: 0;
-  }
-
-  .content {
-    grid-column: 2;
-    padding-right: 32px;
-  }
-
-  .map {
-    grid-column: 3;
-    margin-right: var(--gutter);
-  }
-
-  .storefront {
-    grid-column: 1 / -1;
-    min-height: 0;
-    aspect-ratio: 3 / 1;
-  }
-
-  .storefront img {
-    object-position: 50% 22%; /* keep the shop sign in the wide strip */
-  }
-}
-
-/* Tablet: text, then map, then the storefront photo */
-@media (max-width: 1023px) {
-  .band {
+@media (max-width: 899px) {
+  .layout {
     grid-template-columns: 1fr;
-    row-gap: 0;
-    padding-left: 0;
-  }
-
-  .content {
-    padding: var(--section-pad) var(--gutter) 32px;
-  }
-
-  .text {
-    max-width: 460px;
-    font-size: var(--fs-small);
   }
 
   .map {
-    height: 260px;
-    margin: 0 var(--gutter) var(--section-pad);
-  }
-
-  .storefront {
-    min-height: 0;
-    aspect-ratio: 2 / 1;
-  }
-
-  .storefront img {
-    object-position: 50% 22%;
+    min-height: 320px;
   }
 }
 
-@media (max-width: 767px) {
-  .info {
+@media (max-width: 479px) {
+  .actions {
     flex-direction: column;
-    gap: 16px;
-  }
-
-  .info > * + * {
-    margin-left: 0;
-    padding-left: 0;
-    border-left: 0;
-  }
-
-  .map {
-    height: 220px;
-  }
-
-  .storefront {
-    aspect-ratio: 4 / 3;
+    align-items: stretch;
+    width: 100%;
   }
 }
