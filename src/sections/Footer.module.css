@@ -1,0 +1,103 @@
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-deep);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  min-height: 125px;
+  padding-top: 24px;
+  padding-bottom: 30px;
+}
+
+.brand {
+  justify-self: start;
+  margin-left: -6px; /* optical: the tracked wordmark starts inside its box */
+}
+
+.nav {
+  padding-top: 18px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 25px;
+}
+
+.link {
+  display: inline-block;
+  padding: 6px 0;
+  color: var(--text);
+  font-size: 0.71875rem;
+  transition: color var(--dur) var(--ease);
+}
+
+.link:hover {
+  color: var(--gold);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-self: end;
+  gap: 6px;
+  padding-top: 15px;
+}
+
+.socials {
+  display: flex;
+  margin-right: -9px;
+}
+
+.social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--text);
+  transition: color var(--dur) var(--ease);
+}
+
+.social:hover {
+  color: var(--gold);
+}
+
+.copyright {
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+}
+
+@media (max-width: 767px) {
+  .inner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    row-gap: 20px;
+    padding-top: 40px;
+    padding-bottom: 32px;
+    text-align: center;
+  }
+
+  .brand,
+  .meta {
+    justify-self: center;
+  }
+
+  .nav,
+  .meta {
+    padding-top: 0;
+  }
+
+  .meta {
+    align-items: center;
+  }
+
+  .socials {
+    margin-right: 0;
+  }
+}

@@ -1,0 +1,145 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color var(--dur) var(--ease);
+}
+
+.media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+}
+
+.media > * {
+  transition: transform 500ms var(--ease);
+}
+
+.tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 8px;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-pill);
+  background: rgb(10 11 11 / 0.8);
+  color: var(--gold);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 14px 16px 12px;
+}
+
+.name {
+  font-size: 1.1875rem;
+  line-height: 1.25;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.card:has(.link:focus-visible) {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.role {
+  margin-top: 2px;
+  color: var(--gold);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.chips li {
+  padding: 3px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+}
+
+.more svg {
+  color: var(--gold);
+  transition: transform var(--dur) var(--ease);
+}
+
+/* Sits above the stretched link so it stays independently clickable */
+.call {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-pill);
+  color: var(--gold);
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.call:hover {
+  background: var(--gold-btn);
+  color: var(--text-on-gold);
+}
+
+.card:hover {
+  border-color: var(--gold);
+}
+
+.card:hover .more svg {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card:hover .media > :first-child {
+    transform: scale(1.03);
+  }
+}

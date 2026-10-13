@@ -1,0 +1,245 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+}
+
+.portrait {
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  aspect-ratio: 4 / 5;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 4px;
+}
+
+.tag {
+  margin-bottom: 14px;
+  padding: 3px 10px;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-pill);
+  color: var(--gold);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin-top: 8px;
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.5rem);
+  line-height: 1.05;
+}
+
+.name:focus {
+  outline: none;
+}
+
+.meta {
+  margin-top: 8px;
+  color: var(--text-dim);
+  font-size: var(--fs-caption);
+}
+
+.bio {
+  max-width: 52ch;
+  margin-top: 16px;
+  color: var(--text-muted);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.chips li {
+  padding: 4px 11px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-body);
+  font-size: var(--fs-caption);
+}
+
+.contact {
+  width: 100%;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+
+.phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text);
+}
+
+.ring {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--gold-line);
+  border-radius: var(--radius-pill);
+  color: var(--gold);
+}
+
+.number {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.caption {
+  display: block;
+  color: var(--text-dim);
+  font-size: 0.6875rem;
+}
+
+.phone:hover .number {
+  color: var(--gold);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.request {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-body);
+  font-size: var(--fs-small);
+  cursor: pointer;
+}
+
+.request svg {
+  color: var(--gold);
+}
+
+.request:hover {
+  color: var(--gold);
+}
+
+/* Work */
+.work {
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.workHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 20px;
+  margin-bottom: 16px;
+}
+
+.workTitle {
+  font-size: 1.5rem;
+}
+
+.count {
+  color: var(--text-dim);
+  font-size: var(--fs-caption);
+}
+
+/* Portfolio grid: three square tiles per row, like a social profile */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: zoom-in;
+  aspect-ratio: 1 / 1;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 500ms var(--ease);
+}
+
+.tile:hover {
+  border-color: var(--gold);
+}
+
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding-left: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-pill);
+  background: rgb(10 11 11 / 0.55);
+  color: var(--text);
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tile:hover img {
+    transform: scale(1.04);
+  }
+}
+
+@media (max-width: 767px) {
+  .header {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  /* Compact portrait so the contact buttons stay on the first screen */
+  .portrait {
+    width: 132px;
+    aspect-ratio: 1 / 1;
+  }
+
+  .actions > * {
+    flex: 1 1 100%;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}

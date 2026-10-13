@@ -1,0 +1,19 @@
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sm {
+  gap: 5px;
+}
+
+.title {
+  font-size: var(--fs-h2);
+  line-height: 1.12;
+}
+
+.titleSm {
+  font-size: var(--fs-h2-sm);
+  line-height: 1.24;
+}

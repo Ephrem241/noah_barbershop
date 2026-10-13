@@ -1,0 +1,154 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 517px;
+  border-bottom: 1px solid var(--gold-hairline);
+  background: var(--bg);
+}
+
+.image {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: -2;
+  width: 72%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 8% 30%;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, var(--bg) 0%, var(--bg) 33%, rgb(10 11 11 / 0.7) 40%, rgb(10 11 11 / 0) 54%),
+    linear-gradient(0deg, rgb(10 11 11 / 0.55) 0%, rgb(10 11 11 / 0) 22%);
+}
+
+.inner {
+  padding-top: 137px;
+  padding-bottom: 46px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 520px;
+  padding-left: var(--inset);
+}
+
+.eyebrow {
+  font-size: 0.78125rem; /* 12.5px — larger than section eyebrows in the mockup */
+  letter-spacing: 0.21em;
+}
+
+.title {
+  margin-top: 6px;
+  font-size: var(--fs-h1);
+  line-height: 1.06;
+  letter-spacing: -0.005em;
+}
+
+.accent {
+  color: var(--gold);
+}
+
+.lead {
+  max-width: 22.5em;
+  margin-top: 15px;
+  color: var(--text-body);
+  font-size: var(--fs-lead);
+  line-height: 1.52;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.scroll {
+  position: absolute;
+  right: max(var(--gutter), calc((100% - var(--container)) / 2 - 48px));
+  bottom: 22px;
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  padding: 4px;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  transition: color var(--dur) var(--ease);
+}
+
+.scroll span {
+  margin-bottom: 18px;
+}
+
+.scroll:hover {
+  color: var(--gold);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scroll svg {
+    animation: nudge 2.4s var(--ease) infinite;
+  }
+}
+
+@keyframes nudge {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(5px);
+  }
+}
+
+@media (max-width: 1023px) {
+  .image {
+    width: 78%;
+  }
+
+  .overlay {
+    background:
+      linear-gradient(90deg, var(--bg) 0%, var(--bg) 22%, rgb(10 11 11 / 0.75) 40%, rgb(10 11 11 / 0.1) 70%),
+      linear-gradient(0deg, rgb(10 11 11 / 0.6) 0%, rgb(10 11 11 / 0) 25%);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    min-height: 0;
+  }
+
+  .image {
+    width: 100%;
+    object-position: 45% 20%;
+  }
+
+  .overlay {
+    background: linear-gradient(180deg, rgb(10 11 11 / 0.55) 0%, rgb(10 11 11 / 0.78) 45%, var(--bg) 100%);
+  }
+
+  .inner {
+    padding-top: 128px;
+    padding-bottom: 64px;
+  }
+
+  .lead {
+    color: var(--text-body);
+  }
+
+  .actions {
+    gap: 12px;
+  }
+
+  .scroll {
+    display: none;
+  }
+}
