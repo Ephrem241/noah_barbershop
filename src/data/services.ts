@@ -27,7 +27,7 @@ export const services: Service[] = [
   {
     title: 'Skin Fade / Taper Fade',
     description: 'High-precision seamless fades crafted by our master barbers.',
-    price: 'ETB 300',
+    price: 'ETB 1,000',
     priceFrom: true,
     image: '/images/service-fade.jpg',
     alt: 'Close-up of a seamless skin fade',

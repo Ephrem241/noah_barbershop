@@ -32,7 +32,7 @@ export const socials = [
   { label: 'TikTok', icon: 'tiktok', href: '#' },
 ] as const
 
-/** Homepage sections in the navbar and footer (the logo links to #home; "Book Now" to #booking). */
+/** Homepage sections in the navbar and footer (the logo links to #home; "Book Now" to /barbers). */
 export const navLinks = [
   { id: 'services', label: 'Services' },
   { id: 'gallery', label: 'Our Work' },

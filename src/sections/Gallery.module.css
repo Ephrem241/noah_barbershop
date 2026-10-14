@@ -125,6 +125,13 @@
   }
 }
 
+.empty {
+  padding: 32px 0 8px;
+  color: var(--text-muted);
+  font-size: var(--fs-small);
+  text-align: center;
+}
+
 .footer {
   display: flex;
   flex-wrap: wrap;

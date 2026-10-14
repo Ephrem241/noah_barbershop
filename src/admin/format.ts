@@ -29,11 +29,4 @@ export function timeAgo(iso: string) {
   return 'just now'
 }
 
-export const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 40)
+export { slugify } from '../utils/slug'

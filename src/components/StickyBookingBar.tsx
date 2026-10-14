@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BOOKING_SECTION_ID } from '../booking/context'
+import { BARBERS_PATH } from '../booking/context'
 import { useShop } from '../content/hooks'
 import { useScrolledPast } from '../hooks/useScrolledPast'
 import { Button } from './Button'
@@ -9,8 +9,8 @@ const isField = (el: EventTarget | null) =>
   el instanceof HTMLElement && el.matches('input, select, textarea, [contenteditable="true"]')
 
 /**
- * Phones and small tablets: Book / Call pinned to the bottom of the screen once the hero has scrolled away.
- * It steps aside while the booking form, contact section or footer is on screen (they have the same actions)
+ * Phones and small tablets, on the homepage: Book / Call pinned to the bottom of the screen once the hero has
+ * scrolled away. It steps aside while the contact section or footer is on screen (they have the same actions)
  * and while a form field has focus, so it never sits over the on-screen keyboard or the field being typed in.
  */
 export function StickyBookingBar() {
@@ -20,7 +20,7 @@ export function StickyBookingBar() {
   const [typing, setTyping] = useState(false)
 
   useEffect(() => {
-    const targets = [document.getElementById(BOOKING_SECTION_ID), document.getElementById('contact'), document.querySelector('footer')]
+    const targets = [document.getElementById('contact'), document.querySelector('footer')]
     const inView = new Set<Element>()
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
@@ -48,7 +48,7 @@ export function StickyBookingBar() {
 
   return (
     <div className={`${styles.bar} ${visible ? styles.visible : ''}`} inert={!visible} aria-hidden={!visible}>
-      <Button href={`#${BOOKING_SECTION_ID}`} icon="calendar" className={styles.book}>
+      <Button to={BARBERS_PATH} icon="calendar" className={styles.book}>
         Book Now
       </Button>
       <Button href={shop.phone.href} variant="secondary" icon="phone">

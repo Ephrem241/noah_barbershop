@@ -44,7 +44,10 @@ export function DashboardPage() {
       <section className={styles.card}>
         <h2 className={styles.cardTitle}>Latest new requests</h2>
         {fresh.length === 0 ? (
-          <p className={styles.empty}>No new booking requests. They’ll appear here the moment a client sends one.</p>
+          <p className={styles.empty}>
+            No new booking requests. Clients now contact their barber directly from the website, so the request inbox
+            only holds earlier requests.
+          </p>
         ) : (
           <ul className={styles.list}>
             {fresh.slice(0, 5).map((r) => (

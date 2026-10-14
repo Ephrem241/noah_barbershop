@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from '../../components/Button'
-import { whatsappHref } from '../../booking/contact'
+import { telHref, whatsappHref } from '../../booking/contact'
 import type { Tables } from '../../lib/database.types'
 import { useRows, useTableMutations } from '../data'
 import { formatDate, formatTime, timeAgo } from '../format'
@@ -24,7 +24,9 @@ function RequestCard({
   const { update, remove } = useTableMutations('booking_requests')
   const { toast, confirm } = useFeedback()
   const [note, setNote] = useState(request.admin_note ?? '')
-  const tel = `tel:${request.phone.replace(/[^\d+]/g, '')}`
+  const tel = telHref(request.phone) ?? `tel:${request.phone.replace(/[^\d+]/g, '')}`
+  // Only for a number WhatsApp can reach (local 09… numbers get +251)
+  const whatsapp = whatsappHref(request.phone, `Hi ${request.name}, this is Noah Barbershop about your booking request.`)
 
   const setStatus = async (status: Status) => {
     try {
@@ -92,16 +94,11 @@ function RequestCard({
           <Button href={tel} size="sm" icon="phone">
             Call
           </Button>
-          <Button
-            href={whatsappHref(request.phone, `Hi ${request.name}, this is Noah Barbershop about your booking request.`)}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="secondary"
-            size="sm"
-            icon="whatsapp"
-          >
-            WhatsApp
-          </Button>
+          {whatsapp ? (
+            <Button href={whatsapp} target="_blank" rel="noopener noreferrer" variant="secondary" size="sm" icon="whatsapp">
+              WhatsApp
+            </Button>
+          ) : null}
         </div>
       </div>
 
@@ -166,8 +163,8 @@ export function RequestsPage() {
         <div>
           <h1 className={styles.pageTitle}>Booking requests</h1>
           <p className={styles.pageLead}>
-            Requests sent from the website. New ones appear instantly — call the client, then mark the request as
-            confirmed.
+            Requests clients sent through the website’s former request form. The website now sends clients straight
+            to their barber (Barbers → contact buttons), so no new requests arrive here; earlier ones are kept.
           </p>
         </div>
       </div>

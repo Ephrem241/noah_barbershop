@@ -27,8 +27,14 @@
 }
 
 .skeleton {
-  min-height: 440px;
+  min-height: 560px;
   border-radius: var(--radius);
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  margin-top: 36px;
 }
 
 @media (max-width: 899px) {

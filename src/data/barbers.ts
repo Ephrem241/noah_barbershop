@@ -1,25 +1,28 @@
 /*
- * Barber profiles shown when a client taps "Book Appointment".
+ * Barber profiles: the "Choose Your Barber" page (/barbers), "Meet the barbers" on the homepage, and the profile
+ * dialog (/barbers#book/<id>).
  *
- * The live site reads barbers from Supabase and they are managed in /admin — this file is only the
- * built-in fallback used when the backend is unreachable. The notes below still apply to media you upload.
+ * Barbers are managed in /admin → Barbers and read from Supabase. A profile only appears on the website once it is
+ * visible and its "Sample profile" switch is off; the admin only allows that with a portrait, a bio, at least one
+ * specialty and at least one valid contact method, so unfinished profiles never reach visitors. Until one is
+ * published, the website shows a short note about the team instead of cards.
  *
- * HOW TO ADD OR UPDATE A BARBER
- * 1. Put their media in  public/barbers/<id>/  e.g. public/barbers/ephrem/portrait.jpg
- *    - Portrait: JPG, about 800×1000 (portrait orientation), face in the upper third.
- *    - Work photos: JPG, about 1200px on the long side.
- *    - Work videos: MP4 (H.264), 15 s or shorter, under 8 MB, plus a poster JPG (first frame).
- *      Compress a phone clip with ffmpeg:
- *        ffmpeg -i input.mov -t 15 -vf "scale=-2:1280" -c:v libx264 -crf 28 -preset slow \
- *               -movflags +faststart -c:a aac -b:a 96k work-1.mp4
- *        ffmpeg -i work-1.mp4 -vframes 1 -q:v 4 work-1-poster.jpg
- * 2. Fill in the entry below. Paths start with "/" (they are served from public/).
- * 3. Remove `placeholder: true` once the profile is real — it shows a "Sample profile" tag.
+ * The built-in list below is used only when the backend is unreachable, and is empty on purpose: it holds no
+ * verified profiles. Never add invented names, photos or contact details here.
  *
- * Contact fields:
- *   phone     Shown on the profile and used for the Call button, e.g. '+251 94 668 8207'.
- *   telegram  Optional Telegram username without "@" (preferred) or phone number; no button when empty.
- *   whatsapp  Optional WhatsApp number; no button when empty (the shop line takes calls only).
+ * Contact fields (only details the barber has approved for public display):
+ *   phoneNumber       Call button, e.g. '+251 94 668 8207' or '0946688207' (Ethiopian numbers get +251).
+ *   whatsappNumber    WhatsApp button; only a number that is actually on WhatsApp.
+ *   telegramUsername  Telegram button: the public username ('noahbarber', '@noahbarber' or 't.me/noahbarber'),
+ *                     or a phone number if the barber allows being found by number in Telegram's privacy settings.
+ * A missing or invalid value hides that button (src/booking/contact.ts validates them); nothing is ever faked.
+ *
+ * Media tips for the profiles you upload:
+ *   - Portrait: JPG, about 800×1000 (portrait orientation), face in the upper third.
+ *   - Work photos: JPG, about 1200px on the long side.
+ *   - Work videos: MP4 (H.264), 15 s or shorter, under 8 MB. Compress a phone clip with ffmpeg:
+ *       ffmpeg -i input.mov -t 15 -vf "scale=-2:1280" -c:v libx264 -crf 28 -preset slow \
+ *              -movflags +faststart -c:a aac -b:a 96k work-1.mp4
  */
 
 export type WorkItem =
@@ -27,7 +30,7 @@ export type WorkItem =
   | { type: 'video'; src: string; poster: string; alt: string }
 
 export type Barber = {
-  /** URL-safe id (the database slug), used in profile links: yoursite.com/#book/<id> */
+  /** URL-safe id (the database slug), used in profile links: yoursite.com/barbers#book/<id> */
   id: string
   /** Database id (absent in the built-in fallback content) */
   uuid?: string
@@ -35,77 +38,17 @@ export type Barber = {
   role: string
   /** Portrait photo; without one, a gold monogram is shown */
   photo?: string
+  /** Short introduction; the first lines show on the barber card, all of it on the profile */
   bio: string
   specialties: string[]
   experience?: string
   languages?: string[]
-  phone: string
-  telegram?: string
-  whatsapp?: string
+  phoneNumber?: string
+  whatsappNumber?: string
+  telegramUsername?: string
+  /** Shown on the website */
+  active: boolean
   work: WorkItem[]
-  placeholder?: boolean
 }
 
-const sampleVideo: WorkItem = {
-  type: 'video',
-  src: '/barbers/sample/work-sample.mp4',
-  poster: '/barbers/sample/work-sample-poster.jpg',
-  alt: 'Sample video — replace with a short clip of a finished cut',
-}
-
-// PLACEHOLDER PROFILES — every number below is the shop's line and every photo is a temporary stand-in.
-export const barbers: Barber[] = [
-  {
-    id: 'ephrem',
-    name: 'Ephrem',
-    role: 'Master Barber',
-    bio: 'Sample bio — replace with Ephrem’s story: how long he has been cutting, where he trained and the styles he loves. A Tripadvisor reviewer called his scissor technique “outstanding, very detailed, and professional.”',
-    specialties: ['Scissor cuts', 'Skin fades', 'Beard design'],
-    phone: '+251 94 668 8207',
-    work: [
-      { type: 'photo', src: '/images/gallery-3.jpg', alt: 'Skin fade with a curved part-line design' },
-      sampleVideo,
-      { type: 'photo', src: '/images/gallery-1.jpg', alt: 'Low fade with a full, sculpted beard' },
-      { type: 'photo', src: '/images/service-haircut.jpg', alt: 'Precision haircut with a sharp line-up' },
-      { type: 'photo', src: '/images/gallery-2.jpg', alt: 'Curly top with a clean taper' },
-      { type: 'photo', src: '/images/service-fade.jpg', alt: 'Close-up of a seamless skin fade' },
-    ],
-    placeholder: true,
-  },
-  {
-    id: 'barber-two',
-    name: 'Barber Two',
-    role: 'Senior Barber',
-    bio: 'Sample bio — replace with this barber’s name, background and signature services.',
-    specialties: ['Beard sculpting', 'Hot towel shave', 'Line-ups'],
-    experience: '6 years',
-    languages: ['Amharic', 'English'],
-    phone: '+251 94 668 8207',
-    work: [
-      { type: 'photo', src: '/images/service-beard.jpg', alt: 'Shaped and lined-up full beard' },
-      { type: 'photo', src: '/images/gallery-4.jpg', alt: 'Textured curls with a fade' },
-      sampleVideo,
-      { type: 'photo', src: '/images/service-shave.jpg', alt: 'Warm towel before a straight-razor shave' },
-      { type: 'photo', src: '/images/gallery-5.jpg', alt: 'High fade with a zig-zag hair design' },
-    ],
-    placeholder: true,
-  },
-  {
-    id: 'barber-three',
-    name: 'Barber Three',
-    role: 'Barber & Grooming Specialist',
-    bio: 'Sample bio — replace with this barber’s name, background and signature services.',
-    specialties: ['Taper fades', 'Facials', 'Scalp treatments'],
-    experience: '4 years',
-    languages: ['Amharic', 'English', 'Afaan Oromo'],
-    phone: '+251 94 668 8207',
-    work: [
-      { type: 'photo', src: '/images/service-fade.jpg', alt: 'Seamless taper fade' },
-      { type: 'photo', src: '/images/service-scalp.jpg', alt: 'Scalp massage treatment' },
-      sampleVideo,
-      { type: 'photo', src: '/images/service-facial.jpg', alt: 'Cleansing facial mask treatment' },
-      { type: 'photo', src: '/images/gallery-2.jpg', alt: 'Curly top with a clean taper' },
-    ],
-    placeholder: true,
-  },
-]
+export const barbers: Barber[] = []

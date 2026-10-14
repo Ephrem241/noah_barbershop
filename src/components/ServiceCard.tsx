@@ -1,15 +1,14 @@
-import { BOOKING_SECTION_ID } from '../booking/context'
+import { Link } from 'react-router-dom'
+import { barbersPath } from '../booking/context'
 import type { Service } from '../data/services'
 import { Icon } from './Icon'
 import styles from './ServiceCard.module.css'
 
-type ServiceCardProps = Service & {
-  /** Called when "Book" is chosen, before the link scrolls to the booking form */
-  onBook: () => void
-}
-
-/** One line of the services menu: thumbnail, title · price, description, duration and a Book link. */
-export function ServiceCard({ title, description, price, priceFrom, duration, image, onBook }: ServiceCardProps) {
+/**
+ * One line of the services menu: thumbnail, title · price, description, duration and a Book link, which opens the
+ * barber choice with this service selected (/barbers?service=…).
+ */
+export function ServiceCard({ title, description, price, priceFrom, duration, image }: Service) {
   return (
     <article className={styles.item}>
       <div className={styles.thumb}>
@@ -33,10 +32,10 @@ export function ServiceCard({ title, description, price, priceFrom, duration, im
               {duration}
             </span>
           ) : null}
-          <a href={`#${BOOKING_SECTION_ID}`} className={styles.book} onClick={onBook}>
+          <Link to={barbersPath(title)} className={styles.book}>
             Book<span className="visually-hidden"> {title}</span>
             <Icon name="arrowRight" size={14} strokeWidth={1.7} />
-          </a>
+          </Link>
         </div>
       </div>
     </article>

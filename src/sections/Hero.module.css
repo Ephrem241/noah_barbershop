@@ -38,7 +38,7 @@
 /* Pause / play for the looping footage (WCAG 2.2.2). Outside .media so the content layer can't cover it. */
 .playback {
   position: absolute;
-  right: var(--gutter);
+  right: max(var(--gutter), env(safe-area-inset-right, 0px));
   bottom: 28px;
   z-index: 1;
   display: inline-flex;
@@ -208,5 +208,71 @@
   .meta {
     margin-top: 32px;
     gap: 4px 20px;
+  }
+}
+
+/* Landscape phones: copy beside the footage (as on desktop), compact enough that "Book Your Cut" is on the first
+   screen instead of below a hero taller than the viewport */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero {
+    flex-direction: row;
+    align-items: center;
+    min-height: 0;
+  }
+
+  .media {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 60%;
+    height: auto;
+  }
+
+  .media::after {
+    background:
+      linear-gradient(90deg, var(--bg) 0%, rgb(20 19 17 / 0.8) 30%, rgb(20 19 17 / 0.2) 75%),
+      linear-gradient(180deg, rgb(20 19 17 / 0.7) 0%, rgb(20 19 17 / 0) 22%);
+  }
+
+  .image {
+    object-position: 30% 35%;
+  }
+
+  .playback {
+    top: auto;
+    bottom: 16px;
+  }
+
+  .inner {
+    margin-top: 0;
+    padding-top: calc(var(--nav-h) + 12px);
+    padding-bottom: 28px;
+  }
+
+  .content {
+    max-width: min(560px, 62vw);
+  }
+
+  .title {
+    margin-top: 12px;
+    font-size: clamp(1.9rem, 8.5vh, 2.75rem);
+  }
+
+  .lead {
+    max-width: 34em;
+    margin-top: 12px;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .actions {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    margin-top: 18px;
+  }
+
+  .meta {
+    margin-top: 20px;
+    padding-top: 14px;
   }
 }

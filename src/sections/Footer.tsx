@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
-import { BOOKING_SECTION_ID } from '../booking/context'
+import { BARBERS_PATH } from '../booking/context'
 import { Icon } from '../components/Icon'
 import { Logo } from '../components/Logo'
+import { SectionLink } from '../components/SectionLink'
 import { useShop } from '../content/hooks'
 import { navLinks, site } from '../data/site'
 import styles from './Footer.module.css'
@@ -40,9 +41,9 @@ export function Footer() {
           <ul className={styles.list}>
             {navLinks.map((link) => (
               <li key={link.id}>
-                <a href={`#${link.id}`} className={styles.link}>
+                <SectionLink section={link.id} className={styles.link}>
                   {link.label}
-                </a>
+                </SectionLink>
               </li>
             ))}
           </ul>
@@ -70,9 +71,9 @@ export function Footer() {
           <a href={shop.phone.href} className={styles.phone}>
             {shop.phone.display}
           </a>
-          <a href={`#${BOOKING_SECTION_ID}`} className={styles.link}>
-            Request an appointment
-          </a>
+          <Link to={BARBERS_PATH} className={styles.link}>
+            Choose your barber
+          </Link>
         </div>
       </div>
 

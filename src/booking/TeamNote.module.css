@@ -1,0 +1,76 @@
+/* No published profiles yet: a client's words about the team, and how to book meanwhile */
+.note {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 40px 72px;
+  align-items: center;
+  padding: clamp(28px, 4vw, 52px);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.quote {
+  padding-left: 24px;
+  border-left: 2px solid var(--accent);
+}
+
+.quote blockquote {
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.625rem);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.quote figcaption {
+  margin-top: 14px;
+  color: var(--text-dim);
+  font-size: var(--fs-caption);
+}
+
+.quote a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.text {
+  max-width: 40ch;
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.phone {
+  margin-top: 12px;
+  color: var(--text-dim);
+  font-size: var(--fs-caption);
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 899px) {
+  .note {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 479px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

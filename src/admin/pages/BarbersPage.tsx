@@ -76,7 +76,7 @@ export function BarbersPage() {
                     <span>
                       {count} {count === 1 ? 'work item' : 'work items'}
                     </span>
-                    {b.is_sample ? <span className={`${styles.pill} ${styles.pillGold}`}>Sample profile</span> : null}
+                    {b.is_sample ? <span className={`${styles.pill} ${styles.pillGold}`}>Sample · not on website</span> : null}
                     {!b.is_active ? <span className={styles.pill}>Hidden</span> : null}
                   </p>
                 </div>

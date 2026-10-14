@@ -14,6 +14,9 @@ import {
   fetchTestimonials,
 } from './api'
 
+// Built once, so the fallback keeps a stable identity between renders
+const publishedFallbackBarbers = fallbackBarbers.filter((b) => b.active)
+
 const contentQueries = {
   shop: { queryKey: contentKeys.shop, queryFn: fetchShop },
   services: { queryKey: contentKeys.services, queryFn: fetchServices },
@@ -42,4 +45,4 @@ export const useShop = () => useContent(contentQueries.shop, fallbackShop).data
 export const useServices = () => useContent(contentQueries.services, fallbackServices)
 export const useGallery = () => useContent(contentQueries.gallery, fallbackGallery)
 export const useTestimonials = () => useContent(contentQueries.testimonials, fallbackTestimonials)
-export const useBarbers = () => useContent(contentQueries.barbers, fallbackBarbers)
+export const useBarbers = () => useContent(contentQueries.barbers, publishedFallbackBarbers)

@@ -157,6 +157,20 @@
   }
 }
 
+/* Touch screens: full-size tap targets for the footer links and phone number */
+@media (pointer: coarse) {
+  .link,
+  .phone {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .list {
+    margin-top: -4px;
+  }
+}
+
 @media (max-width: 899px) {
   /* Clear the home indicator on notched phones */
   .bottom {

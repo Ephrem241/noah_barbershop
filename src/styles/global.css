@@ -16,7 +16,7 @@ html {
 
 @media (max-width: 899px) {
   html {
-    scroll-padding-bottom: 88px;
+    scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -159,7 +159,9 @@ main[id] {
   width: 100%;
   max-width: calc(var(--container) + var(--gutter) * 2);
   margin-inline: auto;
-  padding-inline: var(--gutter);
+  /* Landscape phones: clear of the notch / rounded corners (viewport-fit=cover lets the page reach under them) */
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
 }
 
 .section {

@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { contactLinks, formatPhone, normalizePhone, normalizeTelegram, telegramHref, telHref, whatsappHref } from '../../booking/contact'
 import { Button } from '../../components/Button'
 import { Icon } from '../../components/Icon'
 import type { Tables } from '../../lib/database.types'
@@ -14,8 +15,38 @@ import styles from '../admin.module.css'
 import ui from '../ui/ui.module.css'
 
 type Barber = Tables<'barbers'>
-const PHONE_RE = /^[+0-9 ()-]{7,25}$/
 const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/
+const PHONE_ERROR = 'Enter a full number, e.g. +251 94 668 8207 or 0946688207 (other countries need their +code).'
+
+/** Shown on the website: visible and no longer a sample */
+const isPublished = (b: Pick<Barber, 'is_active' | 'is_sample'>) => b.is_active && !b.is_sample
+
+/** Stored in one standard form: "+251 94 668 8207", and Telegram usernames without "@" or a link */
+const storedPhone = (raw: string) => {
+  const phone = normalizePhone(raw)
+  return phone ? formatPhone(phone) : ''
+}
+const storedTelegram = (raw: string) => {
+  const contact = normalizeTelegram(raw) ?? ''
+  return contact.startsWith('+') ? formatPhone(contact) : contact
+}
+
+const linksOf = (b: Pick<Barber, 'phone' | 'whatsapp' | 'telegram'>) =>
+  contactLinks({ phoneNumber: b.phone, whatsappNumber: b.whatsapp, telegramUsername: b.telegram })
+
+/** "Call +251 94 668 8207 · Telegram @noahbarber" */
+function contactSummary(b: Pick<Barber, 'phone' | 'whatsapp' | 'telegram'>) {
+  const { call, whatsapp, telegram } = linksOf(b)
+  return [call && `Call ${call.number}`, whatsapp && `WhatsApp ${whatsapp.number}`, telegram && `Telegram ${telegram.handle}`]
+    .filter(Boolean)
+    .join(' · ')
+}
+
+/** "Opens wa.me/251946688207" for a valid value, so staff can check the link before saving */
+const opens = (href: string | null) => (href ? `Opens ${href.replace(/^https:\/\//, '').replace(/\?.*$/, '')}` : null)
+
+const listJoin = (items: string[]) =>
+  items.length > 1 ? `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}` : (items[0] ?? '')
 
 function friendlyDbError(message: string) {
   if (/barbers_slug_key|duplicate key/i.test(message)) return 'That link name is already used by another barber.'
@@ -27,7 +58,7 @@ function BarberForm({ initial, isNew }: { initial: Barber; isNew: boolean }) {
   const navigate = useNavigate()
   const { insert, update } = useTableMutations('barbers')
   const barbers = useRows('barbers')
-  const { toast } = useFeedback()
+  const { toast, confirm } = useFeedback()
   const [form, setForm] = useState(initial)
   const [slugTouched, setSlugTouched] = useState(!isNew)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -39,7 +70,24 @@ function BarberForm({ initial, isNew }: { initial: Barber; isNew: boolean }) {
     if (!form.name.trim()) e.name = 'Name is required.'
     if (!SLUG_RE.test(form.slug)) e.slug = 'Use lowercase letters, numbers and dashes, e.g. “ephrem”.'
     else if (form.slug === 'request') e.slug = '“request” is reserved — choose another link name.'
-    if (!PHONE_RE.test(form.phone.trim())) e.phone = 'Enter a phone number like +251 94 668 8207.'
+    if (form.phone.trim() && !normalizePhone(form.phone)) e.phone = PHONE_ERROR
+    if (form.whatsapp.trim() && !normalizePhone(form.whatsapp)) e.whatsapp = PHONE_ERROR
+    if (form.telegram.trim() && !normalizeTelegram(form.telegram)) {
+      e.telegram = 'Enter the public username (5–32 letters, digits or _), e.g. noahbarber, @noahbarber or t.me/noahbarber.'
+    }
+    // Only finished profiles reach the website
+    if (isPublished(form)) {
+      const { call, whatsapp, telegram } = linksOf(form)
+      const missing = [
+        !form.photo_path && 'a portrait',
+        !form.bio.trim() && 'a bio',
+        !form.specialties.length && 'at least one specialty',
+        !call && !whatsapp && !telegram && 'a phone, WhatsApp or Telegram contact',
+      ].filter((m): m is string => Boolean(m))
+      if (missing.length) {
+        e.publish = `To show this profile on the website, add ${listJoin(missing)}, or keep “Sample profile” on until then.`
+      }
+    }
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -55,13 +103,26 @@ function BarberForm({ initial, isNew }: { initial: Barber; isNew: boolean }) {
       specialties: form.specialties,
       languages: form.languages,
       experience: form.experience.trim(),
-      phone: form.phone.trim(),
-      telegram: form.telegram.trim().replace(/^@/, ''),
-      whatsapp: form.whatsapp.trim(),
+      phone: storedPhone(form.phone),
+      telegram: storedTelegram(form.telegram),
+      whatsapp: storedPhone(form.whatsapp),
       photo_path: form.photo_path,
       is_active: form.is_active,
       is_sample: form.is_sample,
     }
+
+    // Contact details become public: staff confirm exactly what visitors will see
+    const wasPublished = !isNew && isPublished(initial)
+    const contactChanged = contactSummary(values) !== contactSummary(initial)
+    if (isPublished(values) && (!wasPublished || contactChanged)) {
+      const ok = await confirm({
+        title: wasPublished ? `Update ${values.name}’s public contact details?` : `Publish ${values.name}’s profile?`,
+        message: `Visitors will see ${values.name}’s photo and bio, and can contact them directly: ${contactSummary(values)}. Only publish details ${values.name} has agreed to share publicly.`,
+        confirmLabel: wasPublished ? 'Save' : 'Publish',
+      })
+      if (!ok) return
+    }
+
     try {
       if (isNew) {
         await insert.mutateAsync({ ...values, id: form.id, sort_order: nextSortOrder(barbers.data ?? []) })
@@ -106,7 +167,7 @@ function BarberForm({ initial, isNew }: { initial: Barber; isNew: boolean }) {
           label="Link name"
           value={form.slug}
           error={errors.slug}
-          hint={`Profile link: yoursite.com/#book/${form.slug || '…'}`}
+          hint={`Profile link: yoursite.com/barbers#book/${form.slug || '…'}`}
           onChange={(e) => {
             setSlugTouched(true)
             set('slug', e.target.value.toLowerCase())
@@ -114,7 +175,15 @@ function BarberForm({ initial, isNew }: { initial: Barber; isNew: boolean }) {
         />
         <TextField label="Role" value={form.role} placeholder="Master Barber" onChange={(e) => set('role', e.target.value)} />
         <TextField label="Experience" value={form.experience} placeholder="8 years" onChange={(e) => set('experience', e.target.value)} />
-        <TextArea className={styles.full} label="Bio" value={form.bio} rows={4} maxLength={800} onChange={(e) => set('bio', e.target.value)} />
+        <TextArea
+          className={styles.full}
+          label="Bio"
+          value={form.bio}
+          rows={4}
+          maxLength={800}
+          hint="A short introduction: the first two or three lines show on the barber card, all of it on the profile."
+          onChange={(e) => set('bio', e.target.value)}
+        />
         <TagInput
           label="Specialties"
           value={form.specialties}
@@ -123,36 +192,52 @@ function BarberForm({ initial, isNew }: { initial: Barber; isNew: boolean }) {
           onChange={(v) => set('specialties', v)}
         />
         <TagInput label="Languages" value={form.languages} placeholder="Amharic, English…" onChange={(v) => set('languages', v)} />
+        <p className={`${styles.full} ${ui.hint}`}>
+          Contact buttons on the website. Only enter numbers and usernames the barber has agreed to show publicly;
+          leave a field empty to hide that button.
+        </p>
         <TextField
-          label="Phone *"
+          label="Phone (Call button)"
           value={form.phone}
           error={errors.phone}
           type="tel"
-          placeholder="+251 9…"
+          placeholder="+251 9… or 09…"
+          hint={opens(telHref(form.phone)) ?? 'The barber’s own number for bookings.'}
           onChange={(e) => set('phone', e.target.value)}
         />
         <TextField
-          label="Telegram"
-          value={form.telegram}
-          placeholder="username or +2519…"
-          hint="Leave empty to hide the Telegram button. A username works best; a phone number only works if they allow it in Telegram privacy settings."
-          onChange={(e) => set('telegram', e.target.value)}
+          label="WhatsApp number"
+          value={form.whatsapp}
+          error={errors.whatsapp}
+          type="tel"
+          placeholder="+251 9… or 09…"
+          hint={opens(whatsappHref(form.whatsapp, '')) ?? 'Only if this number uses WhatsApp.'}
+          onChange={(e) => set('whatsapp', e.target.value)}
         />
         <TextField
-          label="WhatsApp"
-          value={form.whatsapp}
-          placeholder="+2519…"
-          hint="Only if this number uses WhatsApp. Leave empty to hide the WhatsApp button."
-          onChange={(e) => set('whatsapp', e.target.value)}
+          label="Telegram username"
+          value={form.telegram}
+          error={errors.telegram}
+          placeholder="noahbarber"
+          hint={
+            opens(telegramHref(form.telegram)) ??
+            'The public @username (best), or a phone number if they allow it in Telegram’s privacy settings.'
+          }
+          onChange={(e) => set('telegram', e.target.value)}
         />
         <div className={styles.stack}>
           <Toggle label="Visible on the website" checked={form.is_active} onChange={(v) => set('is_active', v)} />
           <Toggle
-            label="Show “Sample profile” tag"
-            hint="Turn off once the real details are in."
+            label="Sample profile (not shown on the website)"
+            hint="Turn off once the real details are in: the profile then appears on the website."
             checked={form.is_sample}
             onChange={(v) => set('is_sample', v)}
           />
+          {errors.publish ? (
+            <p className={ui.fieldError} role="alert">
+              {errors.publish}
+            </p>
+          ) : null}
         </div>
       </div>
       <div className={styles.actions} style={{ marginTop: 22 }}>
@@ -318,7 +403,7 @@ export function BarberEditorPage() {
       <div className={styles.pageHead}>
         <h1 className={styles.pageTitle}>{isNew ? 'Add a barber' : (existing?.name ?? 'Barber')}</h1>
         {existing ? (
-          <Button href={`/#book/${existing.slug}`} target="_blank" rel="noopener noreferrer" variant="secondary" size="sm" icon="external">
+          <Button href={`/barbers#book/${existing.slug}`} target="_blank" rel="noopener noreferrer" variant="secondary" size="sm" icon="external">
             View on website
           </Button>
         ) : null}

@@ -92,6 +92,15 @@ export function Gallery() {
               ))}
         </ul>
 
+        {!isLoading && filtered.length === 0 ? (
+          <p className={styles.empty}>
+            No photos in this style yet.{' '}
+            <button type="button" className={styles.more} onClick={() => choose('all')}>
+              Show all photos
+            </button>
+          </p>
+        ) : null}
+
         <div className={styles.footer}>
           {filtered.length > PAGE && !expanded ? (
             <button type="button" className={styles.more} onClick={() => setExpanded(true)}>

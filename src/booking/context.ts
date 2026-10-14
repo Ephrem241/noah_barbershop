@@ -1,43 +1,43 @@
 import { createContext, useContext } from 'react'
+import { slugify } from '../utils/slug'
 
 /**
- * Booking dialog state, mirrored in the URL:
- *   #book                    barber list
- *   #book/<barberId>         barber profile
- *   #book/request            appointment request form (any barber)
- *   #book/<barberId>/request appointment request form for that barber
+ * Barber profile dialog, mirrored in the URL hash so a profile can be linked to and Back closes it:
+ *   #book/<barberId>   that barber's profile, over whichever page is open (usually /barbers#book/<barberId>)
  */
-export type BookingRoute = { open: false } | { open: true; barberId: string | null; request: boolean }
-
-/** Choices handed to the on-page request form (#booking); `version` changes on every hand-off. */
-export type RequestPrefill = { serviceId?: string; barberId?: string; version: number }
-
 export type BookingContextValue = {
-  route: BookingRoute
-  openBooking: (barberId?: string) => void
-  showBarber: (barberId: string) => void
-  showRequest: (barberId: string | null) => void
-  /** Back to the previous dialog view (profile → list, request → profile or list) */
-  goBack: () => void
-  closeBooking: () => void
-  prefill: RequestPrefill | null
-  /** Pre-select a service or barber in the on-page request form (the caller's #booking link does the scrolling) */
-  prefillRequest: (values: Omit<RequestPrefill, 'version'>) => void
+  /** Id (slug) in the URL of the profile to show, or null */
+  barberId: string | null
+  openProfile: (barberId: string) => void
+  closeProfile: () => void
 }
 
 export const BookingContext = createContext<BookingContextValue | null>(null)
 
-/** Id of the on-page booking section. Not "#book…": that prefix belongs to the dialog routes above. */
-export const BOOKING_SECTION_ID = 'booking'
+export const BARBERS_PATH = '/barbers'
 
-export const bookingHash = (barberId?: string | null, request = false) =>
-  `#book${barberId ? `/${barberId}` : ''}${request ? '/request' : ''}`
+/** The service picked from the menu travels as /barbers?service=<slug of its title> */
+export const SERVICE_PARAM = 'service'
+export const serviceSlug = (title: string) => slugify(title)
+export const barbersPath = (serviceTitle?: string) =>
+  serviceTitle ? `${BARBERS_PATH}?${SERVICE_PARAM}=${serviceSlug(serviceTitle)}` : BARBERS_PATH
 
-export function parseBookingHash(hash: string): BookingRoute {
-  const match = /^#book(?:\/([\w-]+))?(?:\/(request))?$/.exec(hash)
-  if (!match) return { open: false }
-  if (match[1] === 'request' && !match[2]) return { open: true, barberId: null, request: true }
-  return { open: true, barberId: match[1] ?? null, request: Boolean(match[2]) }
+export const profileHash = (barberId: string) => `#book/${barberId}`
+
+/** "#book/ephrem" → "ephrem"; anything else → null */
+export function parseProfileHash(hash: string): string | null {
+  const match = /^#book\/([\w-]+)$/.exec(hash)
+  return match && match[1] !== 'request' ? match[1] : null
+}
+
+/**
+ * Links from before the /barbers page (the request form at #booking, the dialog's barber list and request views)
+ * → where they lead now; null for any other hash.
+ */
+export function legacyBookingTarget(hash: string): string | null {
+  if (hash === '#booking' || /^#book(?:\/request)?\/?$/.test(hash)) return BARBERS_PATH
+  const match = /^#book\/([\w-]+)\/request\/?$/.exec(hash)
+  return match ? `${BARBERS_PATH}${profileHash(match[1])}` : null
 }
 
 export function useBooking() {

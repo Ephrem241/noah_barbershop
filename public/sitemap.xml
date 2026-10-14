@@ -4,4 +4,8 @@
     <loc>https://noah-barbershop-9cv3.vercel.app/</loc>
     <changefreq>weekly</changefreq>
   </url>
+  <url>
+    <loc>https://noah-barbershop-9cv3.vercel.app/barbers</loc>
+    <changefreq>weekly</changefreq>
+  </url>
 </urlset>

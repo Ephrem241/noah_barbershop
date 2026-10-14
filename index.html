@@ -19,11 +19,12 @@
     <meta property="og:title" content="Noah Barbershop – Haircuts & Fades in Bole, Addis Ababa" />
     <meta
       property="og:description"
-      content="Haircuts, skin fades, beard trims and shaves near Edna Mall, Bole. Open daily 8 AM–9 PM. Request an appointment online."
+      content="Haircuts, skin fades, beard trims and shaves near Edna Mall, Bole. Open daily 8 AM–9 PM. Walk-ins welcome."
     />
     <meta property="og:image" content="https://noah-barbershop-9cv3.vercel.app/images/hero-poster.jpg" />
     <meta property="og:image:width" content="1280" />
     <meta property="og:image:height" content="720" />
+    <meta property="og:image:alt" content="A client with a fresh fade and beard line-up at Noah Barbershop" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!--
@@ -38,6 +39,7 @@
         "@id": "https://noah-barbershop-9cv3.vercel.app/#barbershop",
         "name": "Noah Barbershop",
         "url": "https://noah-barbershop-9cv3.vercel.app/",
+        "image": "https://noah-barbershop-9cv3.vercel.app/images/hero-poster.jpg",
         "telephone": "+251946688207",
         "address": {
           "@type": "PostalAddress",
@@ -55,7 +57,7 @@
             "closes": "21:00"
           }
         ],
-        "priceRange": "ETB 250–600",
+        "priceRange": "ETB 250–1000",
         "currenciesAccepted": "ETB",
         "sameAs": [
           "https://www.tripadvisor.com/Attraction_Review-g293791-d34039775-Reviews-Noah_barber_shop-Addis_Ababa.html"
@@ -63,12 +65,9 @@
       }
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:opsz,wght,SOFT,WONK@9..144,500..600,0,0&display=swap"
-    />
+    <!-- Self-hosted fonts (src/styles/fonts.css): the latin files are needed for the first paint -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-v38-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-sans-v17-latin.woff2" crossorigin />
     <!-- The hero video's poster is the first thing painted -->
     <link rel="preload" as="image" href="/images/hero-poster.jpg" fetchpriority="high" />
   </head>

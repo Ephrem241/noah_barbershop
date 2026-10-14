@@ -1,4 +1,4 @@
-import { BOOKING_SECTION_ID } from '../booking/context'
+import { BARBERS_PATH } from '../booking/context'
 import { Button } from '../components/Button'
 import { Icon } from '../components/Icon'
 import { InfoItem } from '../components/InfoItem'
@@ -7,7 +7,8 @@ import { useShop } from '../content/hooks'
 import styles from './VisitUs.module.css'
 
 /**
- * Stylized dark street map (illustrative, not to scale), shown only until exact coordinates are set in /admin.
+ * Stylized dark street map (illustrative, not to scale): the map until exact coordinates are set in /admin, and the
+ * placeholder under the live Google Map while that loads.
  * The street layer stretches to any box with constant stroke widths; the pin and label are HTML so they keep
  * their size at every breakpoint.
  */
@@ -58,8 +59,8 @@ export function VisitUs() {
         <div className={`reveal ${styles.content}`}>
           <SectionHeading id="contact-title" eyebrow="Visit us" title="Find the shop" />
           <p className={styles.text}>
-            We’re {locationPhrase(shop.address.line1, shop.address.line2)}. Walk-ins are welcome; requesting a time
-            ahead helps you avoid a wait.
+            We’re {locationPhrase(shop.address.line1, shop.address.line2)}. Walk-ins are welcome; contacting your
+            barber ahead helps you avoid a wait.
           </p>
 
           <div className={styles.info}>
@@ -76,15 +77,16 @@ export function VisitUs() {
             <Button href={shop.directionsUrl} icon="navigate" target="_blank" rel="noopener noreferrer">
               Get Directions<span className="visually-hidden"> (opens Google Maps in a new tab)</span>
             </Button>
-            <Button href={`#${BOOKING_SECTION_ID}`} variant="secondary" icon="calendar">
-              Request a Time
+            <Button to={BARBERS_PATH} variant="secondary" icon="calendar">
+              Choose Your Barber
             </Button>
           </div>
         </div>
 
         {shop.mapEmbedUrl ? (
-          // Exact pin: a real (darkened) Google Map
+          // Exact pin: a real (darkened) Google Map. The drawn map underneath shows while it loads, or if it can't.
           <div className={`${styles.map} ${styles.liveMap}`}>
+            <MapIllustration />
             <iframe
               src={shop.mapEmbedUrl}
               title="Map showing Noah Barbershop’s exact location"

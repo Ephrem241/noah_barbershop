@@ -38,7 +38,7 @@ export function About() {
               </p>
             </blockquote>
             <figcaption>
-              Yonatan A. ·{' '}
+              Yonatan A ·{' '}
               {tripadvisor ? (
                 <a href={tripadvisor.url} target="_blank" rel="noopener noreferrer">
                   Tripadvisor review<span className="visually-hidden"> (opens in a new tab)</span>

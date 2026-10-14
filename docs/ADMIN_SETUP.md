@@ -1,13 +1,15 @@
 # Noah Barbershop — admin setup
 
 The website reads its content (barbers, services & prices, gallery, testimonials, shop info) from Supabase, and
-staff manage it at **`/admin`** after signing in with Google. Booking requests sent from the website land in the
-admin inbox.
+staff manage it at **`/admin`** after signing in with Google. Clients book by choosing a barber at **`/barbers`**
+(every “Book” button leads there) and calling or messaging that barber directly.
 
 - Supabase project: **naoh_barbershop** — `https://wxyfhszrtumhpavjmhul.supabase.co`
 - First admin: **eph8611@gmail.com** (add more under *Admins* in the panel)
-- Database schema & security rules: `supabase/migrations/` (all applied, the latest being
-  `20261014120000_duration_category_contacts`: service durations, gallery categories)
+- Database schema & security rules: `supabase/migrations/`. Applied up to
+  `20261014120000_duration_category_contacts` (service durations, gallery categories).
+  **Still to run:** `20261015120000_close_public_booking_requests`, once the version without the request form is
+  live (see *Booking requests* below).
 - New migrations: run the file in Supabase → **SQL Editor**, *before* deploying code that uses it.
 
 ## 1. Turn on Google sign-in (one time, ~10 minutes)
@@ -18,16 +20,20 @@ admin inbox.
    support email = your Gmail → Save. Under *Audience*, click **Publish app** (so any admin’s Gmail can sign in).
 3. **APIs & Services → Credentials → Create credentials → OAuth client ID**:
    - Application type: **Web application**
-   - **Authorized JavaScript origins**: `http://localhost:5173` and your live site, e.g. `https://noah-barbershop.vercel.app`
+   - **Authorized JavaScript origins**: `http://localhost:5173` and your live site, `https://noah-barbershop-9cv3.vercel.app`
    - **Authorized redirect URIs**: `https://wxyfhszrtumhpavjmhul.supabase.co/auth/v1/callback`
 4. Copy the **Client ID** and **Client secret**.
 
 ### b. Supabase Dashboard
 1. <https://supabase.com/dashboard/project/wxyfhszrtumhpavjmhul> → **Authentication → Sign In / Providers → Google**:
    enable it, paste the Client ID and Client secret → Save.
-2. **Authentication → URL Configuration**:
-   - **Site URL**: your live site, e.g. `https://noah-barbershop.vercel.app`
-   - **Redirect URLs** (add each): `http://localhost:5173/**`, `http://localhost:5174/**`, `https://noah-barbershop.vercel.app/**`
+2. **Authentication → URL Configuration** (current settings):
+   - **Site URL**: `https://noah-barbershop-9cv3.vercel.app`
+   - **Redirect URLs**: `https://noah-barbershop-9cv3.vercel.app/**`, `http://localhost:5173/**`, and the
+     `noah-barbershop-eprems-projects.vercel.app` entries (the same site under its Vercel team address).
+   - **Every address you open `/admin` from must be on this list.** Sign-in returns to the address it started
+     from; if that address isn’t listed, Supabase sends you to the Site URL instead — a different domain, where the
+     sign-in can’t finish — and you have to sign in a second time. Add a custom domain here as soon as you use it.
 3. Optional but recommended: **Sign In / Providers → Email** → turn off, since only Google is used.
 
 ## 2. Deploy on Vercel
@@ -43,8 +49,8 @@ Open `https://<your-site>/admin` → **Sign in with Google**.
 
 | Page | What you can do |
 |---|---|
-| Booking requests | New requests appear instantly. Call or WhatsApp the client, set the status (new → confirmed → done / cancelled), add a private note. |
-| Barbers | Add, edit, hide, reorder, delete. Portrait, bio, specialties, phone; Telegram and WhatsApp buttons appear only when those fields are filled in. Upload work photos and videos. Turn off “Sample profile” once a profile is real. |
+| Booking requests | Requests sent through the website’s former request form. The form has been removed (clients now contact their barber directly), so nothing new arrives; you can still call or WhatsApp those clients, set the status and add notes. |
+| Barbers | Add, edit, hide, reorder, delete. Portrait, bio, specialties and the three contact buttons (see *Barber profiles and contact buttons* below). Upload work photos and videos. **A profile appears on the website only once it is visible and “Sample profile” is turned off**; while none is published, `/barbers` and “Meet the barbers” show a short note about the team instead (a client review naming Ephrem, plus Call the shop / Get Directions). |
 | Services & prices | Title, description, price in birr (a “from” price shows as *from ETB 350*), optional duration in minutes (shown only when filled in), image, order, hide. |
 | Gallery | Upload photos (resized automatically), describe each, pick a category, reorder, hide. “Our Work” shows every visible photo; the style filters appear once photos use at least two categories. |
 | Testimonials | Add real client reviews with source and date, reorder, hide. They appear in the “Reviews” section. |
@@ -52,6 +58,28 @@ Open `https://<your-site>/admin` → **Sign in with Google**.
 | Admins | Add or remove admin Gmail addresses (you can’t remove yourself or the last admin). |
 
 Every change shows on the website immediately (visitors see it on their next page load).
+
+### Barber profiles and contact buttons
+Every “Book” button on the website (hero, navbar, each service, the phone bar) opens **`/barbers`**, “Choose Your
+Barber”. Each barber card has up to three buttons, and the client agrees on a day and time with the barber directly;
+the website never claims a message confirms a booking. Booking from a service adds it to the address
+(`/barbers?service=skin-fade-taper-fade`) and to the WhatsApp message.
+
+| Field | What to enter | Button on the website |
+|---|---|---|
+| Phone (Call button) | The barber’s own number, e.g. `+251 94 668 8207` or `0946688207` | **Call** → `tel:+251946688207` |
+| WhatsApp number | Only a number that is on WhatsApp | **WhatsApp** → `wa.me/251…` with the message *“Hello, I found you on the Noah Barbershop website. I’d like to book a haircut (or the chosen service). What dates and times are available?”* |
+| Telegram username | The public username: `noahbarber`, `@noahbarber` or `t.me/noahbarber` (a phone number also works if the barber allows it in Telegram’s privacy settings) | **Telegram** → `t.me/noahbarber` (opens the app, or Telegram’s web page without it) |
+
+- Only enter details the barber has agreed to show publicly. The shop line (+251 94 668 8207) takes calls only:
+  don’t enter it as anyone’s WhatsApp or Telegram.
+- Ethiopian numbers can be typed in any common way; they are saved as `+251 9x xxx xxxx`. Under each field the
+  editor shows the link it will create (“Opens wa.me/251…”); a value that can’t work is refused, and an empty field
+  simply hides that button.
+- To publish a profile (visible, “Sample profile” off), it needs a **portrait, a bio, at least one specialty and at
+  least one contact**. Saving then asks you to confirm the exact numbers and username visitors will see.
+- The first two or three lines of the bio show on the card; the full bio, languages and work photos are on the
+  profile (`/barbers#book/<link name>`, also “View on website” in the editor).
 
 ### Set the exact map location (do this once)
 Until a pin is set, the website shows a drawn map and “Get Directions” searches Google Maps for the shop.
@@ -66,9 +94,10 @@ A full Google Maps link also works in the Coordinates box; short `maps.app.goo.g
 and copy the coordinates instead).
 
 ### Hero video
-The top of the homepage plays the shop’s own footage, muted and looping, with a pause button. It doesn’t play for
-visitors who ask for reduced motion or have data saver on: they see a still frame instead. Three files, all made from
-one landscape clip (ideally 8–15 s):
+The top of the homepage plays the shop’s own footage, muted and looping, with a pause button. It starts once the page
+has finished loading (the still frame shows first), pauses while scrolled out of view, and phones or slow connections
+get the lighter 480p file. It doesn’t play for visitors who ask for reduced motion or have data saver on: they see the
+still frame and can press play. Three files, all made from one landscape clip (ideally 8–15 s):
 
 | File | What it is |
 |---|---|
@@ -83,6 +112,9 @@ ffmpeg -i clip.mp4 -an -c:v libx264 -profile:v high -preset slow -crf 28 -pix_fm
 ffmpeg -i clip.mp4 -frames:v 1 -q:v 4 public/images/hero-poster.jpg
 ```
 Keep people roughly in the centre-left of the frame: the left edge fades into the headline on desktop.
+Browsers cache files in `public/images`, `public/videos` and `public/barbers` for a day (`vercel.json`), so returning
+visitors may see the old clip for up to a day after a swap; use new file names (and update `src/sections/Hero.tsx`) if
+it must change at once. Fonts are self-hosted in `public/fonts` (see `src/styles/fonts.css`).
 
 ### Photos to replace
 Apart from the hero video, every photo the site shipped with is a **generated placeholder**, not the shop’s own work.
@@ -93,7 +125,7 @@ Replace them with real photos from the shop as soon as you can — real work is 
 | Services menu thumbnails | Admin → Services & prices → Edit → Image | Square-ish, ≥ 400 px |
 | “Our Work” gallery | Admin → Gallery: upload real cuts, then hide or delete `gallery-1…5` | Portrait or square, ≥ 1000 px |
 | Barber portraits and work | Admin → Barbers → Edit: portrait, photos and short videos | Portrait 800 × 1000 px |
-| Sample work video | Admin → Barbers: delete the “Sample video” item from each profile | — |
+| Sample work video | Admin → Barbers: delete the “Sample video” item from each profile (sample profiles aren’t shown on the website) | — |
 
 Also worth filling in when you have them: Instagram / Facebook / TikTok links (Shop info — they appear in the
 footer, and Instagram also under “Our Work”), real barber names and bios, and service durations.
@@ -109,8 +141,9 @@ footer, and Instagram also under “Our Work”), real barber names and bios, an
 
 ## How access is protected
 - The browser key in `.env.local` is public by design; **row-level security** in the database decides what each
-  visitor may do: the public can only read visible content and *submit* booking requests (max 3 per phone number
-  per 10 minutes); only admins can read requests or change anything.
+  visitor may do: the public can only read visible content (and, until `20261015120000_close_public_booking_requests`
+  is run, *submit* booking requests, max 3 per phone number per 10 minutes); only admins can read requests or change
+  anything.
 - “Admin” = signed in **with Google** *and* the email is on the Admins list (checked by `public.is_admin()` in the
   database, not just in the browser).
 - Uploaded files go to the public `media` storage bucket; only admins can upload, replace or delete them.
@@ -119,6 +152,8 @@ footer, and Instagram also under “Our Work”), real barber names and bios, an
 - *“Unsupported provider”* or the Google button does nothing → Google isn’t enabled yet in Supabase (step 1b).
 - *“redirect_uri_mismatch”* from Google → the redirect URI in step 1a.3 must be exactly
   `https://wxyfhszrtumhpavjmhul.supabase.co/auth/v1/callback`.
+- Have to sign in twice, or Google sends you back to the homepage / another domain → the address you started
+  from isn’t in **Redirect URLs** (step 1b.2). Add `https://<that address>/**`.
 - Signed in but “Not authorized” → that Gmail isn’t on the Admins list; an existing admin must add it.
 - Website shows old content → it falls back to built-in content only if Supabase can’t be reached; check the
   environment variables on Vercel.

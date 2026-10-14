@@ -1,25 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { BOOKING_SECTION_ID } from '../booking/context'
+import { BARBERS_PATH } from '../booking/context'
 import { Button } from '../components/Button'
 import { Icon } from '../components/Icon'
 import { Logo } from '../components/Logo'
+import { SectionLink } from '../components/SectionLink'
 import { openingSummary } from '../content/api'
 import { useShop } from '../content/hooks'
 import { navLinks } from '../data/site'
 import { useActiveSection } from '../hooks/useActiveSection'
+import { useIsHomePage } from '../hooks/useIsHomePage'
 import { useScrolledPast } from '../hooks/useScrolledPast'
 import styles from './Navbar.module.css'
 
-// Scrollspy targets in page order. The booking section has no nav link: tracking it keeps "Reviews" from staying
-// highlighted while the visitor is at the form.
-const sectionIds = ['home', ...navLinks.map((link) => link.id)].flatMap((id) =>
-  id === 'contact' ? [BOOKING_SECTION_ID, id] : [id],
-)
+// Scrollspy targets, in page order
+const sectionIds = ['home', ...navLinks.map((link) => link.id)]
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const isHome = useIsHomePage()
   const scrolled = useScrolledPast('home', 72)
-  const active = useActiveSection(sectionIds, 'home')
+  const spied = useActiveSection(sectionIds, 'home')
+  // Other pages have no hero to sit over, and no sections to highlight
+  const solid = scrolled || !isHome
+  const active = isHome ? spied : null
   const toggleRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
   const shop = useShop()
@@ -70,7 +73,8 @@ export function Navbar() {
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  const headerClass = [styles.header, scrolled && styles.solid, menuOpen && styles.menuOpen].filter(Boolean).join(' ')
+  const headerClass = [styles.header, solid && styles.solid, menuOpen && styles.menuOpen].filter(Boolean).join(' ')
+  const onBarbersPage = !isHome
 
   return (
     <header className={headerClass}>
@@ -81,13 +85,13 @@ export function Navbar() {
           <ul className={styles.links}>
             {navLinks.map((link) => (
               <li key={link.id}>
-                <a
-                  href={`#${link.id}`}
+                <SectionLink
+                  section={link.id}
                   className={styles.link}
                   aria-current={active === link.id ? 'location' : undefined}
                 >
                   {link.label}
-                </a>
+                </SectionLink>
               </li>
             ))}
           </ul>
@@ -98,7 +102,13 @@ export function Navbar() {
             <Icon name="phone" size={15} strokeWidth={1.7} />
             {shop.phone.display}
           </a>
-          <Button href={`#${BOOKING_SECTION_ID}`} size="sm" className={styles.cta} onClick={() => closeMenu()}>
+          <Button
+            to={BARBERS_PATH}
+            size="sm"
+            className={styles.cta}
+            aria-current={onBarbersPage ? 'page' : undefined}
+            onClick={() => closeMenu()}
+          >
             Book Now
           </Button>
           <button
@@ -128,20 +138,25 @@ export function Navbar() {
           <ul>
             {navLinks.map((link) => (
               <li key={link.id}>
-                <a
-                  href={`#${link.id}`}
+                <SectionLink
+                  section={link.id}
                   className={styles.drawerLink}
                   aria-current={active === link.id ? 'location' : undefined}
                   onClick={() => closeMenu()}
                 >
                   {link.label}
-                </a>
+                </SectionLink>
               </li>
             ))}
           </ul>
         </nav>
         <div className={styles.drawerFooter}>
-          <Button href={`#${BOOKING_SECTION_ID}`} icon="calendar" onClick={() => closeMenu()}>
+          <Button
+            to={BARBERS_PATH}
+            icon="calendar"
+            aria-current={onBarbersPage ? 'page' : undefined}
+            onClick={() => closeMenu()}
+          >
             Book Now
           </Button>
           <Button href={shop.phone.href} variant="secondary" icon="phone">

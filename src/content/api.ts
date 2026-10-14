@@ -153,11 +153,13 @@ const toWorkItem = (m: Tables<'barber_media'>): WorkItem | null => {
   return { type: 'photo', src, alt: m.alt }
 }
 
+/** Published barbers only: profiles still marked "Sample profile" in /admin stay off the website. */
 export async function fetchBarbers(): Promise<Barber[]> {
   const { data, error } = await requireSupabase()
     .from('barbers')
     .select('*, barber_media(*)')
     .eq('is_active', true)
+    .eq('is_sample', false)
     .order('sort_order')
     .order('sort_order', { referencedTable: 'barber_media' })
   if (error) fail(error)
@@ -171,10 +173,11 @@ export async function fetchBarbers(): Promise<Barber[]> {
     specialties: row.specialties,
     experience: row.experience || undefined,
     languages: row.languages.length ? row.languages : undefined,
-    phone: row.phone,
-    telegram: row.telegram || undefined,
-    whatsapp: row.whatsapp || undefined,
+    // Validated where the links are built (src/booking/contact.ts): an empty or malformed value shows no button
+    phoneNumber: row.phone.trim() || undefined,
+    whatsappNumber: row.whatsapp.trim() || undefined,
+    telegramUsername: row.telegram.trim() || undefined,
+    active: row.is_active,
     work: row.barber_media.map(toWorkItem).filter((w): w is WorkItem => w !== null),
-    placeholder: row.is_sample,
   }))
 }

@@ -9,8 +9,8 @@ export type Testimonial = {
 
 // Built-in fallback content — the live site reads testimonials from Supabase (managed in /admin).
 // Client reviews from Tripadvisor (December 2025). Quotes are verbatim apart from spacing lost when the
-// page was copied. Two reviews were left out: one reads like the shop's own copy and one isn't about a visit.
-// TODO: replace "Tripadvisor reviewer" with the author's name (it was cut off in the copied text).
+// page was copied; names are the reviewers' Tripadvisor display names (checked against the listing on 2026-10-14).
+// Two reviews were left out: one reads like the shop's own copy and one isn't about a visit.
 export const testimonials: Testimonial[] = [
   {
     quote:
@@ -29,14 +29,14 @@ export const testimonials: Testimonial[] = [
   {
     quote:
       'I had a fantastic experience at Noah Barber. The barbers are highly skilled and the hospitality is top-notch. They truly listen to what you want and deliver with great precision. The place is clean, and the service is professional. Highly recommended for anyone looking for a fresh cut!',
-    name: 'Tripadvisor reviewer',
+    name: 'fekadu b',
     caption: 'Tripadvisor · Dec 2025',
     rating: 5,
   },
   {
     quote:
       'It’s a very clean place, with professional barbers, and great service. recommend to anyone looking for a great haircut!',
-    name: 'Daniel M.',
+    name: 'Daniel Mengistu D',
     caption: 'Tripadvisor · Dec 2025',
     rating: 5,
   },

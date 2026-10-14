@@ -1,5 +1,4 @@
 .card {
-  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -7,100 +6,108 @@
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   background: var(--surface);
-  transition: border-color var(--dur) var(--ease);
+  transition:
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
 }
 
+.card:hover {
+  border-color: var(--accent-line);
+  box-shadow: var(--shadow);
+}
+
+/* Portrait photography: 4:5, face in the upper part (BarberPortrait positions it) */
 .media {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 5;
+  background: var(--charcoal);
 }
 
-.media > * {
-  transition: transform 500ms var(--ease);
-}
-
-.tag {
+.media::after {
+  content: '';
   position: absolute;
-  top: 10px;
-  left: 10px;
-  padding: 3px 8px;
-  border: 1px solid rgb(207 174 120 / 0.55);
-  border-radius: var(--radius-pill);
-  background: rgb(12 11 10 / 0.8);
-  color: var(--champagne); /* sits on the dark portrait in either theme */
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  inset: auto 0 0;
+  height: 28%;
+  background: linear-gradient(rgb(12 11 10 / 0), rgb(12 11 10 / 0.28));
+  pointer-events: none;
+}
+
+.media > :first-child {
+  transition: transform 700ms var(--ease);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card:hover .media > :first-child {
+    transform: scale(1.035);
+  }
 }
 
 .body {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 14px 16px 12px;
-}
-
-.name {
-  font-size: 1.1875rem;
-  line-height: 1.25;
-}
-
-.link::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.link:focus-visible {
-  outline: none;
-}
-
-.card:has(.link:focus-visible) {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+  padding: 18px 18px 14px;
 }
 
 .role {
-  margin-top: 2px;
   color: var(--accent);
-  font-size: var(--fs-caption);
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.name {
+  margin-top: 6px;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+/* A short introduction on the card; the profile shows the full bio */
+.bio {
+  display: -webkit-box;
+  margin-top: 10px;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .chips li {
-  padding: 3px 9px;
+  padding: 3px 10px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-pill);
-  color: var(--text-muted);
-  font-size: 0.6875rem;
+  color: var(--text-body);
+  font-size: 0.75rem;
 }
 
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Contact buttons sit at the same height across a row of cards */
+.contact {
   margin-top: auto;
-  padding-top: 14px;
+  padding-top: 18px;
 }
 
 .more {
   display: inline-flex;
   align-items: center;
+  align-self: flex-start;
   gap: 8px;
+  min-height: 44px;
+  margin-top: 6px;
   color: var(--text);
   font-size: var(--fs-caption);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .more svg {
@@ -108,38 +115,17 @@
   transition: transform var(--dur) var(--ease);
 }
 
-/* Sits above the stretched link so it stays independently clickable */
-.call {
-  position: relative;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--accent-line);
-  border-radius: var(--radius-pill);
+.more:hover {
   color: var(--accent);
-  transition:
-    background-color var(--dur) var(--ease),
-    color var(--dur) var(--ease);
 }
 
-.call:hover {
-  background: var(--btn-bg);
-  color: var(--btn-fg);
-}
-
-.card:hover {
-  border-color: var(--accent);
-}
-
-.card:hover .more svg {
+.more:hover svg {
   transform: translateX(3px);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .card:hover .media > :first-child {
-    transform: scale(1.03);
+/* Phones: a square portrait keeps the contact buttons on the first screen */
+@media (max-width: 599px) {
+  .media {
+    aspect-ratio: 1 / 1;
   }
 }

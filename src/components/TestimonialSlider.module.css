@@ -129,6 +129,7 @@
 
 .arrow {
   display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
   width: 44px;
@@ -155,13 +156,18 @@
   cursor: default;
 }
 
+/* Many reviews: dots wrap to a second row rather than squeeze the arrows */
 .dots {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  min-width: 0;
 }
 
+/* 24px wide: the minimum touch target size (WCAG 2.5.8), with the visible dot drawn inside */
 .dot {
   position: relative;
-  width: 22px;
+  width: 24px;
   height: 44px;
   padding: 0;
   border: 0;
@@ -172,7 +178,7 @@
 .dot::before {
   content: '';
   position: absolute;
-  inset: 19px 8px;
+  inset: 19px 9px;
   border-radius: var(--radius-pill);
   background: var(--border-strong);
   transition:
@@ -185,8 +191,15 @@
 }
 
 .dot[aria-current='true']::before {
-  inset: 19px 3px;
+  inset: 19px 4px;
   background: var(--accent);
+}
+
+/* Small phones: tighter spacing so eight dots and both arrows fit on one line */
+@media (max-width: 359px) {
+  .controls {
+    gap: 4px;
+  }
 }
 
 @media (max-width: 1023px) {

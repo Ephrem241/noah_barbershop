@@ -5,7 +5,8 @@
   display: none;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
-  padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+  padding: 10px max(var(--gutter), env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px))
+    max(var(--gutter), env(safe-area-inset-left, 0px));
   border-top: 1px solid var(--border);
   background: rgb(20 19 17 / 0.97);
   transform: translateY(110%);
@@ -23,6 +24,19 @@
 @media (max-width: 899px) {
   .bar {
     display: grid;
+  }
+}
+
+/* Landscape phones: a slimmer bar that leaves more of the short screen for the page */
+@media (max-height: 500px) {
+  .bar {
+    padding-top: 6px;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bar > a {
+    min-height: 44px;
+    padding-block: 0;
   }
 }
 

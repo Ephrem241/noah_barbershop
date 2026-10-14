@@ -1,4 +1,3 @@
-import { useBooking } from '../booking/context'
 import { SectionHeading } from '../components/SectionHeading'
 import { ServiceCard } from '../components/ServiceCard'
 import { useServices } from '../content/hooks'
@@ -6,7 +5,6 @@ import styles from './Services.module.css'
 
 export function Services() {
   const { data: services, isLoading } = useServices()
-  const { prefillRequest } = useBooking()
   const anyFrom = services.some((s) => s.priceFrom)
 
   return (
@@ -15,8 +13,8 @@ export function Services() {
         <div className={`reveal ${styles.head}`}>
           <SectionHeading id="services-title" eyebrow="Services & prices" title="Signature services" />
           <p className={styles.text}>
-            Cuts, fades, beards and grooming treatments. Pick a service to request a time, or choose “Not sure yet”
-            in the form and ask us when we call.
+            Cuts, fades, beards and grooming treatments. Pick a service, then choose your barber and contact them
+            directly.
           </p>
         </div>
 
@@ -29,10 +27,7 @@ export function Services() {
               ))
             : services.map((service) => (
                 <li key={service.id ?? service.title}>
-                  <ServiceCard
-                    {...service}
-                    onBook={() => service.id && prefillRequest({ serviceId: service.id })}
-                  />
+                  <ServiceCard {...service} />
                 </li>
               ))}
         </ul>
