@@ -40,25 +40,91 @@
   margin-top: 36px;
 }
 
+/* Location card: branded header over the map, framed with a gold hairline */
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgb(207 174 120 / 0.24);
+  border-radius: var(--radius-lg);
+  background: var(--bg-deep);
+  box-shadow: 0 32px 64px -32px rgb(0 0 0 / 0.75);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 14px 14px 18px;
+  border-bottom: 1px solid rgb(207 174 120 / 0.16);
+}
+
+.mark {
+  flex: none;
+  width: auto;
+  height: 34px;
+}
+
+.place {
+  flex: 1;
+  min-width: 0;
+}
+
+.placeName {
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.placeAddress {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: var(--fs-caption);
+  line-height: 1.4;
+}
+
+.openMaps {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--accent-line);
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  transition:
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease);
+}
+
+.openMaps svg {
+  color: var(--accent);
+}
+
+.openMaps:hover {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+
 .map {
   position: relative;
-  min-height: 420px;
+  display: block;
+  flex: 1;
+  min-height: 380px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
   background: var(--surface-map);
-  transition: border-color var(--dur) var(--ease);
 }
 
-.map:hover {
-  border-color: var(--accent-line);
-}
-
-/* Real map (exact pin) */
-.liveMap:hover {
-  border-color: var(--border);
-}
-
+/* Google's map, toned to warm monochrome so its colourful place icons don't compete with the gold pin.
+   It ignores the pointer until the visitor chooses to explore, so a swipe over it scrolls the page. */
 .mapFrame {
   position: absolute;
   inset: 0;
@@ -66,64 +132,113 @@
   width: 100%;
   height: 100%;
   border: 0;
-  /* Darken Google's light map to sit in the dark design */
-  filter: invert(0.9) hue-rotate(180deg) saturate(0.6) brightness(0.95);
+  filter: grayscale(1) invert(0.92) sepia(0.2) contrast(0.92) brightness(0.88);
+  pointer-events: none;
 }
 
-/* Top-right: Google's controls and required attribution live along the bottom edge */
-.mapChip {
+.exploring .mapFrame {
+  pointer-events: auto;
+}
+
+.mapSvg {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Tip of the pin on the map's centre */
+.marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.marker svg {
+  display: block;
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.55));
+}
+
+/* Soft ring on the ground under the tip */
+.pulse {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 48px;
+  height: 16px;
+  margin: 0 0 -8px -24px;
+  border: 1px solid var(--accent-line);
+  border-radius: 50%;
+  background: rgb(207 174 120 / 0.14);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pulse {
+    animation: pulse 2.4s var(--ease) infinite;
+  }
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.95;
+    transform: scale(0.55);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+/* Whole map is the "explore" button; the pill sits above Google's logo and attribution */
+.explore {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 16px 44px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.explore:focus-visible {
+  outline-offset: -4px;
+}
+
+.explorePill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-height: 44px;
-  padding: 0 14px;
-  border: 1px solid var(--accent-line);
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgb(244 239 230 / 0.16);
   border-radius: var(--radius-pill);
-  background: rgb(12 11 10 / 0.88);
+  background: rgb(12 11 10 / 0.8);
   color: var(--text);
   font-size: var(--fs-caption);
   font-weight: 600;
+  backdrop-filter: blur(4px);
   transition:
     border-color var(--dur) var(--ease),
     color var(--dur) var(--ease);
 }
 
-.mapChip svg {
+.explorePill svg {
   color: var(--accent);
 }
 
-.mapChip:hover {
-  border-color: var(--accent);
+.explore:hover .explorePill,
+.explore:focus-visible .explorePill {
+  border-color: var(--accent-line);
   color: var(--accent);
 }
 
-.mapSvg {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  inset: 0;
-}
-
-/* Pin circle centered at (41%, 40%) of the map */
-.pin {
-  position: absolute;
-  top: 40%;
-  left: 41%;
-  display: flex;
-  align-items: flex-start;
-  gap: 5px;
-  transform: translate(-10px, -11px);
-}
-
-.pinLabel {
-  margin-top: 4px;
-  color: var(--text);
-  font-size: var(--fs-caption);
-  font-weight: 600;
-  white-space: nowrap;
+/* Drawn map (no exact coordinates yet) links to directions */
+.mapLink:hover .marker svg {
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.55)) brightness(1.08);
 }
 
 @media (max-width: 899px) {
@@ -132,7 +247,7 @@
   }
 
   .map {
-    min-height: 320px;
+    min-height: 300px;
   }
 }
 
@@ -141,5 +256,24 @@
     flex-direction: column;
     align-items: stretch;
     width: 100%;
+  }
+
+  .cardHead {
+    padding-left: 14px;
+  }
+
+  /* Icon-only "Open in Maps"; the label stays for screen readers */
+  .openMaps {
+    width: 44px;
+    padding: 0;
+  }
+
+  .openLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 }

@@ -6,6 +6,7 @@ type IconDef = { viewBox: string; body: ReactNode; filled?: boolean }
 const icons = {
   arrowRight: { viewBox: '0 0 24 24', body: <path d="M5 12h14M13 6l6 6-6 6" /> },
   arrowLeft: { viewBox: '0 0 24 24', body: <path d="M19 12H5M11 6l-6 6 6 6" /> },
+  arrowUp: { viewBox: '0 0 24 24', body: <path d="M12 19V5M6 11l6-6 6 6" /> },
   play: { viewBox: '0 0 24 24', filled: true, body: <path d="M8 5.2v13.6a.8.8 0 0 0 1.2.7l10.9-6.8a.8.8 0 0 0 0-1.4L9.2 4.5A.8.8 0 0 0 8 5.2z" /> },
   pause: {
     viewBox: '0 0 24 24',

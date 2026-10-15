@@ -14,7 +14,19 @@
   filter: drop-shadow(0 1px 6px rgb(0 0 0 / 0.45));
 }
 
-/* Footer: the full emblem */
+/* Footer: the full emblem (beside the tagline on tablets) */
 .footer img {
-  height: 162px;
+  height: 136px;
+}
+
+@media (max-width: 1023px) {
+  .footer img {
+    height: 112px;
+  }
+}
+
+@media (max-width: 599px) {
+  .footer img {
+    height: 120px;
+  }
 }
