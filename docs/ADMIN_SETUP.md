@@ -90,6 +90,11 @@ Until a pin is set, the website shows a drawn map and “Get Directions” searc
    the shop, then **Save shop info**.
 4. The website now shows a real map at that pin, and “Get Directions” starts turn-by-turn navigation to it.
 
+**Google place ID:** leave it empty unless the shop’s own Google Maps listing has its pin on the shop. With a place
+ID, Google sends “Get Directions” to the listing’s pin, not to your coordinates. In October 2026 the “NOAH
+Barbershop” listing sat about 45 m north of the real building (the Hananeel pastry building, plus code XQVP+944). Move
+the listing’s pin in Google Business Profile (Edit profile → Location) before adding the place ID back.
+
 A full Google Maps link also works in the Coordinates box; short `maps.app.goo.gl` share links don’t (open the link
 and copy the coordinates instead).
 

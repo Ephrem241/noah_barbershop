@@ -16,8 +16,12 @@ export const site = {
   },
   /** Used for map links only if no exact location is known (name as listed on Tripadvisor) */
   locationQuery: 'Noah barber shop, Ednamoll street, Addis Ababa',
-  /** Exact pin of the shop's Google Maps listing (https://maps.app.goo.gl/S3BcF635NtPdo7qL8) */
-  location: { lat: 8.993932, lng: 38.78472, placeId: 'ChIJfcHfGEGFSxYRQznllYj100Q' },
+  /**
+   * The shop's building (shared with Hananeel pastry, plus code XQVP+944), confirmed by the owner 2026-10-15.
+   * No place ID: the "NOAH Barbershop" Google listing's own pin is ~45 m north of the building, and directions
+   * with a place ID go to the listing's pin. Add it back once the listing has been moved onto the building.
+   */
+  location: { lat: 8.9935359, lng: 38.7847678 },
   tripadvisor: {
     url: 'https://www.tripadvisor.com/Attraction_Review-g293791-d34039775-Reviews-Noah_barber_shop-Addis_Ababa.html',
     rating: 5,

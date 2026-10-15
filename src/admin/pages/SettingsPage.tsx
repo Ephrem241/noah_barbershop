@@ -133,7 +133,7 @@ function SettingsForm({ initial }: { initial: Settings }) {
               label="Google place ID (optional)"
               {...field('maps_place_id')}
               placeholder="ChIJ…"
-              hint="Lets Google Maps show “Noah barbershop” by name in directions and open the shop’s listing."
+              hint="Lets Google Maps show “Noah barbershop” by name in directions and open the shop’s listing. Directions then go to the listing’s own pin, so leave this empty unless that pin is on the shop."
             />
             <TextField
               label="Google Maps link (optional)"
