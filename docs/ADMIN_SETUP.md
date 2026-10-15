@@ -52,7 +52,7 @@ Open `https://<your-site>/admin` → **Sign in with Google**.
 | Booking requests | Requests sent through the website’s former request form. The form has been removed (clients now contact their barber directly), so nothing new arrives; you can still call or WhatsApp those clients, set the status and add notes. |
 | Barbers | Add, edit, hide, reorder, delete. Portrait, bio, specialties and the three contact buttons (see *Barber profiles and contact buttons* below). Upload work photos and videos. **A profile appears on the website only once it is visible and “Sample profile” is turned off**; while none is published, `/barbers` and “Meet the barbers” show a short note about the team instead (a client review naming Ephrem, plus Call the shop / Get Directions). |
 | Services & prices | Title, description, price in birr (a “from” price shows as *from ETB 350*), optional duration in minutes (shown only when filled in), image, order, hide. |
-| Gallery | Upload photos (resized automatically), describe each, pick a category, reorder, hide. “Our Work” shows every visible photo; the style filters appear once photos use at least two categories. |
+| Gallery | Upload photos (resized automatically) and short videos, describe each, pick a category, reorder, hide. “Our Work” shows every visible item; videos show their first frame with a play button and play when tapped. The style filters appear once items use at least two categories. |
 | Testimonials | Add real client reviews with source and date, reorder, hide. They appear in the “Reviews” section. |
 | Shop info | Phone, address, **exact map location**, opening hours, Tripadvisor badge (link, rating, review count), Instagram / Facebook / TikTok links. |
 | Admins | Add or remove admin Gmail addresses (you can’t remove yourself or the last admin). |
@@ -123,7 +123,7 @@ Replace them with real photos from the shop as soon as you can — real work is 
 | Where | How to replace | Best size |
 |---|---|---|
 | Services menu thumbnails | Admin → Services & prices → Edit → Image | Square-ish, ≥ 400 px |
-| “Our Work” gallery | Admin → Gallery: upload real cuts, then hide or delete `gallery-1…5` | Portrait or square, ≥ 1000 px |
+| “Our Work” gallery | Admin → Gallery: upload real cuts (photos or short videos), then hide or delete `gallery-1…5` | Portrait or square, ≥ 1000 px |
 | Barber portraits and work | Admin → Barbers → Edit: portrait, photos and short videos | Portrait 800 × 1000 px |
 | Sample work video | Admin → Barbers: delete the “Sample video” item from each profile (sample profiles aren’t shown on the website) | — |
 
@@ -131,13 +131,23 @@ Also worth filling in when you have them: Instagram / Facebook / TikTok links (S
 footer, and Instagram also under “Our Work”), real barber names and bios, and service durations.
 
 ### Photo & video tips
-- Photos: JPG/PNG/WebP straight from a phone are fine — they’re resized to ~1600px in the browser before upload.
-- Videos: **MP4**, ideally under 15 seconds; the hard limit is **50 MB** per file (Supabase free plan). Compress a
-  long phone clip with [ffmpeg](https://ffmpeg.org/):
+- Photos: JPG/PNG/WebP straight from a phone are fine — they’re resized in the browser before upload (gallery
+  ~1400px, service and work photos ~1600px).
+- Videos: **MP4**, ideally under 15 seconds; the hard limit is **50 MB** per file (Supabase free plan). The first
+  frame is saved automatically as the thumbnail. Videos aren’t compressed on upload, so compress a long phone clip
+  with [ffmpeg](https://ffmpeg.org/):
   ```
   ffmpeg -i input.mov -t 15 -vf "scale=-2:1280" -c:v libx264 -crf 28 -preset slow -movflags +faststart -c:a aac -b:a 96k clip.mp4
   ```
+- iPhones record in HEVC (`.mov`) by default, which some Android phones and desktop browsers can’t play. Before
+  filming, set **Settings → Camera → Formats → Most Compatible**, or convert the clip with the command above.
 - Storage on the free plan is 1 GB in total — plenty for photos and a few dozen short clips.
+
+### Logo
+The logo artwork is `docs/brand/noah-logo.jpg`. The website uses versions cut from it, with the black background
+made transparent: `public/images/logo-nav.webp` (navbar: crown, monogram and NOAH), `logo.webp` (full emblem:
+footer and admin sign-in), `logo-mark.webp` (admin header), `logo-512.jpg` (search engines), plus `favicon.ico`,
+`icon-192.png` and `apple-touch-icon.png`. If the logo changes, regenerate all of them from the new artwork.
 
 ## How access is protected
 - The browser key in `.env.local` is public by design; **row-level security** in the database decides what each

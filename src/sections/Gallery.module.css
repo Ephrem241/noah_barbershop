@@ -113,6 +113,29 @@
   opacity: 1;
 }
 
+/* Video tiles: always-visible play badge (same as the barber profile's work clips) */
+.open:has(.play) {
+  cursor: pointer;
+}
+
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding-left: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-pill);
+  background: rgb(10 11 11 / 0.55);
+  color: var(--text);
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(2px);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .open:hover img {
     transform: scale(1.04);

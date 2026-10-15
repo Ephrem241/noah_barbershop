@@ -71,14 +71,14 @@ export function AdminLayout() {
           <Icon name={navOpen ? 'close' : 'menu'} size={22} />
         </button>
         <span className={styles.brand}>
-          <Icon name="crown" className={styles.brandCrown} />
+          <img src="/images/logo-mark.webp" alt="" width={104} height={96} className={styles.brandMark} />
           NOAH <span>Admin</span>
         </span>
       </header>
 
       <aside id="admin-nav" className={styles.sidebar} data-open={navOpen}>
         <span className={`${styles.brand} ${styles.sidebarBrand}`}>
-          <Icon name="crown" className={styles.brandCrown} />
+          <img src="/images/logo-mark.webp" alt="" width={104} height={96} className={styles.brandMark} />
           NOAH <span>Admin</span>
         </span>
         <nav aria-label="Admin">

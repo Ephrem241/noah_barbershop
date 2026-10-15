@@ -19,7 +19,7 @@ export function DashboardPage() {
     { label: 'New booking requests', value: fresh.length, to: '/admin/requests', highlight: fresh.length > 0 },
     { label: 'Barbers', value: barbers.data?.length, to: '/admin/barbers' },
     { label: 'Services', value: services.data?.length, to: '/admin/services' },
-    { label: 'Gallery photos', value: gallery.data?.length, to: '/admin/gallery' },
+    { label: 'Gallery items', value: gallery.data?.length, to: '/admin/gallery' },
     { label: 'Testimonials', value: testimonials.data?.length, to: '/admin/testimonials' },
   ]
 

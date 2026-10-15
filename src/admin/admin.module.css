@@ -31,10 +31,9 @@
   text-transform: uppercase;
 }
 
-.brandCrown {
-  height: 16px;
+.brandMark {
+  height: 28px;
   width: auto;
-  color: var(--gold);
 }
 
 .sidebar {
@@ -643,7 +642,7 @@ button.pill:disabled {
   min-height: 100vh;
   padding: 24px 16px;
   background:
-    radial-gradient(80% 60% at 50% 0%, rgb(212 167 102 / 0.08), transparent 60%),
+    radial-gradient(80% 60% at 50% 0%, rgb(207 174 120 / 0.08), transparent 60%),
     var(--bg);
 }
 
@@ -659,11 +658,10 @@ button.pill:disabled {
   text-align: center;
 }
 
-.screenCrown {
-  height: 22px;
+.screenLogo {
+  height: 120px;
   width: auto;
-  margin-bottom: 14px;
-  color: var(--gold);
+  margin-bottom: 6px;
 }
 
 .screenTitle {

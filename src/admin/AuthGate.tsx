@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from 'react'
 import { Button } from '../components/Button'
-import { Icon } from '../components/Icon'
 import { isSupabaseConfigured } from '../lib/supabase'
 import { readAuthError, signInWithGoogle, signOut, useGoogleEnabled, useIsAdmin, useSession } from './auth'
 import { SessionContext } from './session'
@@ -11,8 +10,7 @@ function Screen({ title, children }: { title: string; children: ReactNode }) {
   return (
     <main className={styles.screen}>
       <div className={styles.screenCard}>
-        <Icon name="crown" className={styles.screenCrown} />
-        <p className="eyebrow">Noah Barbershop</p>
+        <img src="/images/logo.webp" alt="Noah Barbershop" width={480} height={517} className={styles.screenLogo} />
         <h1 className={styles.screenTitle}>{title}</h1>
         {children}
         <a href="/" className={styles.screenBack}>

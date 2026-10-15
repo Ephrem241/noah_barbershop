@@ -120,11 +120,15 @@ export async function fetchGallery(): Promise<GalleryImage[]> {
     .order('sort_order')
   if (error) fail(error)
   return (data ?? [])
-    .map((row) => ({
-      image: mediaUrl(row.path) ?? '',
-      alt: row.alt,
-      category: row.category && isGalleryCategory(row.category) ? row.category : undefined,
-    }))
+    .map((row) => {
+      const isVideo = row.kind === 'video'
+      return {
+        image: mediaUrl(isVideo ? row.poster_path : row.path) ?? '',
+        video: isVideo ? mediaUrl(row.path) : undefined,
+        alt: row.alt,
+        category: row.category && isGalleryCategory(row.category) ? row.category : undefined,
+      }
+    })
     .filter((g) => g.image)
 }
 

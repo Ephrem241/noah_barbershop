@@ -198,7 +198,9 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean
+          kind: string
           path: string
+          poster_path: string | null
           sort_order: number
           updated_at: string
         }
@@ -208,7 +210,9 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          kind?: string
           path: string
+          poster_path?: string | null
           sort_order?: number
           updated_at?: string
         }
@@ -218,7 +222,9 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
+          kind?: string
           path?: string
+          poster_path?: string | null
           sort_order?: number
           updated_at?: string
         }

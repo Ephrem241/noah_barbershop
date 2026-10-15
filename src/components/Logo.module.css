@@ -1,57 +1,20 @@
 .logo {
   display: inline-flex;
   flex: none;
-  flex-direction: column;
-  align-items: center;
-  color: var(--text);
-  line-height: 1;
 }
 
-.crown {
+.logo img {
   width: auto;
-  color: var(--accent);
 }
 
-.word {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  padding-left: 0.16em; /* optically re-center the tracked word */
+/* Navbar: fills the bar with a little breathing room (--nav-h is 72px, 64px on small screens) */
+.nav img {
+  height: calc(var(--nav-h) - 14px);
+  /* keeps the gold legible while the bar is transparent over bright frames of the hero video */
+  filter: drop-shadow(0 1px 6px rgb(0 0 0 / 0.45));
 }
 
-.sub {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: 0.52em;
-  padding-left: 0.52em;
-}
-
-/* Navbar */
-.nav .crown {
-  height: 12px;
-  margin-bottom: 4px;
-}
-
-.nav .word {
-  font-size: 25px;
-}
-
-.nav .sub {
-  margin-top: 5px;
-  font-size: 7.5px;
-}
-
-/* Footer */
-.footer .crown {
-  height: 16px;
-  margin-bottom: 6px;
-}
-
-.footer .word {
-  font-size: 32px;
-}
-
-.footer .sub {
-  margin-top: 7px;
-  font-size: 9px;
+/* Footer: the full emblem */
+.footer img {
+  height: 162px;
 }

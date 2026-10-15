@@ -8,7 +8,8 @@ export const GALLERY_CATEGORIES = [
 
 export type GalleryCategory = (typeof GALLERY_CATEGORIES)[number]['id']
 
-export type GalleryImage = { image: string; alt: string; category?: GalleryCategory }
+/** `image` is the still shown on the tile; for a clip it's the poster frame and `video` is the clip itself. */
+export type GalleryImage = { image: string; alt: string; category?: GalleryCategory; video?: string }
 
 export const isGalleryCategory = (value: string): value is GalleryCategory =>
   GALLERY_CATEGORIES.some((c) => c.id === value)
