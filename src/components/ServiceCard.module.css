@@ -7,6 +7,31 @@
   border-top: 1px solid var(--border-strong);
 }
 
+/* No photo uploaded: a compact menu line, with Book beside the title and price instead of below them */
+.item.textOnly {
+  grid-template-columns: minmax(0, 1fr);
+  padding: 18px 0;
+}
+
+.textOnly .body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 24px;
+}
+
+.textOnly .description {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+.textOnly .footer {
+  grid-column: 2;
+  grid-row: 1;
+  margin-top: 0;
+  padding-top: 0;
+}
+
 .thumb {
   overflow: hidden;
   width: 76px;

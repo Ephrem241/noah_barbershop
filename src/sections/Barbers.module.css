@@ -51,6 +51,9 @@
 /* Phones: a swipeable row (one card plus a peek of the next) instead of a very tall stack */
 @media (max-width: 599px) {
   .grid {
+    /* Contains the cards' visually hidden (absolutely positioned) text, which would otherwise escape the
+       scroller and widen the whole page */
+    position: relative;
     grid-template-columns: none;
     grid-auto-flow: column;
     grid-auto-columns: 80%;

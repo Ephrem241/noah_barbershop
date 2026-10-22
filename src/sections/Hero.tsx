@@ -135,19 +135,18 @@ export function Hero() {
         <div className={styles.content}>
           <p className="eyebrow">Barbershop · Bole, Addis Ababa</p>
           <h1 id="hero-title" className={styles.title}>
-            <span className={styles.line}>Sharp cuts.</span> <span className={styles.line}>Clean fades.</span>{' '}
-            <span className={`${styles.line} ${styles.accent}`}>Real care.</span>
+            <span className={styles.line}>Your Style.</span>{' '}
+            <span className={`${styles.line} ${styles.accent}`}>Your Standard.</span>
           </h1>
           <p className={styles.lead}>
-            A clean, welcoming barbershop near Edna Mall. Tell us the look you want and we’ll take the time to get it
-            right.
+            Professional haircuts and grooming, tailored to you. Find us near Edna Mall in Bole.
           </p>
           <div className={styles.actions}>
-            <Button to={BARBERS_PATH} icon="calendar">
-              Book Your Cut
+            <Button to={BARBERS_PATH} arrow>
+              Explore Our Barbers
             </Button>
-            <Button href={shop.directionsUrl} variant="secondary" icon="navigate" target="_blank" rel="noopener noreferrer">
-              Get Directions<span className="visually-hidden"> (opens Google Maps in a new tab)</span>
+            <Button href="#services" variant="secondary">
+              View Services
             </Button>
           </div>
 

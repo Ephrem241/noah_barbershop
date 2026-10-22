@@ -5,15 +5,17 @@ import { Icon } from './Icon'
 import styles from './ServiceCard.module.css'
 
 /**
- * One line of the services menu: thumbnail, title · price, description, duration and a Book link, which opens the
- * barber choice with this service selected (/barbers?service=…).
+ * One line of the services menu: thumbnail (once a photo is uploaded), title · price, description, duration and a Book
+ * link, which opens the barber choice with this service selected (/barbers?service=…).
  */
 export function ServiceCard({ title, description, price, priceFrom, duration, image }: Service) {
   return (
-    <article className={styles.item}>
-      <div className={styles.thumb}>
-        <img src={image} alt="" width={96} height={96} loading="lazy" decoding="async" />
-      </div>
+    <article className={`${styles.item} ${image ? '' : styles.textOnly}`}>
+      {image ? (
+        <div className={styles.thumb}>
+          <img src={image} alt="" width={96} height={96} loading="lazy" decoding="async" />
+        </div>
+      ) : null}
       <div className={styles.body}>
         <div className={styles.head}>
           <h3 className={styles.title}>{title}</h3>
@@ -23,7 +25,7 @@ export function ServiceCard({ title, description, price, priceFrom, duration, im
             {price}
           </p>
         </div>
-        <p className={styles.description}>{description}</p>
+        {description ? <p className={styles.description}>{description}</p> : null}
         <div className={styles.footer}>
           {duration ? (
             <span className={styles.duration}>

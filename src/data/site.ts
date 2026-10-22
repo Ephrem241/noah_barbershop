@@ -36,7 +36,10 @@ export const socials = [
   { label: 'TikTok', icon: 'tiktok', href: '#' },
 ] as const
 
-/** Homepage sections in the navbar and footer (the logo links to #home; "Book Now" to /barbers). */
+/**
+ * Homepage sections in the navbar and footer (the logo links to #home; "Book Now" to /barbers). Read them through
+ * useNavLinks, which leaves out sections that have nothing to show.
+ */
 export const navLinks = [
   { id: 'services', label: 'Services' },
   { id: 'gallery', label: 'Our Work' },

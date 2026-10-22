@@ -21,16 +21,45 @@
   border-bottom: 1px solid var(--border-strong);
 }
 
+/* About the height of a loaded menu line (text-only, as long as no service has a photo), so the list doesn't jump
+   when prices arrive */
 .skeleton {
-  height: 150px;
+  height: 56px;
   margin: 14px 0;
   border-radius: var(--radius);
 }
 
+.unavailable {
+  padding: 28px 0;
+  border-block: 1px solid var(--border-strong);
+  color: var(--text-body);
+  font-size: var(--fs-lead);
+}
+
+.unavailable a {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  margin-top: 24px;
+}
+
 .note {
-  margin-top: 20px;
   color: var(--text-dim);
   font-size: var(--fs-caption);
+}
+
+.cta {
+  margin-left: auto;
 }
 
 @media (max-width: 899px) {
@@ -45,5 +74,17 @@
 
   .grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Phones: the note above a full-width button */
+@media (max-width: 599px) {
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cta {
+    margin-left: 0;
   }
 }

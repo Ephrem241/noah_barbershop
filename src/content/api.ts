@@ -5,8 +5,9 @@ import { site, socials as fallbackSocials } from '../data/site'
 import type { Service } from '../data/services'
 import type { Testimonial } from '../data/testimonials'
 import type { Tables } from '../lib/database.types'
-import { mediaUrl } from '../lib/media'
+import { isStoragePath, mediaUrl } from '../lib/media'
 import { directionsToQuery, directionsUrl, embedUrl, pinUrl, searchUrl } from './location'
+import { formatExperience, splitList, tidyTitle } from './tidy'
 import { requireSupabase } from '../lib/supabase'
 
 /** Public query keys — admin mutations invalidate these so edits show up on the site immediately. */
@@ -96,13 +97,14 @@ export async function fetchShop(): Promise<ShopInfo> {
 
 export const toService = (row: Tables<'services'>): Service => ({
   id: row.id,
-  title: row.title,
-  description: row.description,
+  title: tidyTitle(row.title),
+  description: row.description.trim(),
   price: formatPrice(row.price_etb, false),
   priceFrom: row.price_is_from,
   // Before the duration migration runs the column is absent (undefined), so nothing is shown
   duration: row.duration_minutes ? formatDuration(row.duration_minutes) : undefined,
-  image: mediaUrl(row.image_path) ?? '/images/service-haircut.jpg',
+  // No stand-in photo: an unrelated picture (a haircut beside "Pedicure") misleads more than none
+  image: mediaUrl(row.image_path),
   alt: row.title,
 })
 
@@ -120,6 +122,9 @@ export async function fetchGallery(): Promise<GalleryImage[]> {
     .order('sort_order')
   if (error) fail(error)
   return (data ?? [])
+    // Only media uploaded in /admin: the seeded site files (/images/gallery-*.jpg) are generated stand-ins, and the
+    // website never presents them as the shop's work
+    .filter((row) => isStoragePath(row.path))
     .map((row) => {
       const isVideo = row.kind === 'video'
       return {
@@ -174,9 +179,10 @@ export async function fetchBarbers(): Promise<Barber[]> {
     role: row.role,
     photo: mediaUrl(row.photo_path),
     bio: row.bio,
-    specialties: row.specialties,
-    experience: row.experience || undefined,
-    languages: row.languages.length ? row.languages : undefined,
+    // Entries typed as one tag ("Scissors, fades") show as separate chips
+    specialties: splitList(row.specialties),
+    experience: formatExperience(row.experience) || undefined,
+    languages: splitList(row.languages),
     // Validated where the links are built (src/booking/contact.ts): an empty or malformed value shows no button
     phoneNumber: row.phone.trim() || undefined,
     whatsappNumber: row.whatsapp.trim() || undefined,

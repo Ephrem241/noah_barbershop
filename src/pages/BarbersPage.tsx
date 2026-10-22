@@ -101,12 +101,14 @@ export function BarbersPage() {
                 ? Array.from({ length: 3 }, (_, i) => (
                     <li key={i} className={`skeleton ${styles.skeleton}`} aria-hidden="true" />
                   ))
-                : barbers.map((barber) => (
-                    <li key={barber.id} className="reveal">
+                : // The cards are this page's content: no fade-in, and the first portrait loads right away
+                  barbers.map((barber, i) => (
+                    <li key={barber.id}>
                       <BarberCard
                         barber={barber}
                         serviceTitle={service?.title}
                         headingLevel="h2"
+                        priority={i === 0}
                         onViewProfile={openProfile}
                       />
                     </li>

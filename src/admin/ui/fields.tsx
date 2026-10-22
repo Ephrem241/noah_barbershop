@@ -1,5 +1,6 @@
 import { useId, useState, type InputHTMLAttributes, type KeyboardEvent, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 import { Icon } from '../../components/Icon'
+import { splitList } from '../../content/tidy'
 import styles from './ui.module.css'
 
 type FieldShellProps = { label: string; hint?: ReactNode; error?: string | null; children: (id: string, describedBy?: string) => ReactNode; className?: string }
@@ -83,9 +84,11 @@ type TagInputProps = Common & { value: string[]; onChange: (value: string[]) => 
 /** Chips with an input: Enter or comma adds, × removes. */
 export function TagInput({ label, hint, error, className, value, onChange, placeholder }: TagInputProps) {
   const [draft, setDraft] = useState('')
+  // "Scissors, fades" becomes two tags: phone keyboards often don't send a "," key press, so the whole line arrives
+  // on blur
   const add = () => {
-    const tag = draft.trim().replace(/,$/, '')
-    if (tag && !value.includes(tag)) onChange([...value, tag])
+    const added = splitList([draft]).filter((tag) => !value.some((v) => v.toLowerCase() === tag.toLowerCase()))
+    if (added.length) onChange([...value, ...added])
     setDraft('')
   }
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
