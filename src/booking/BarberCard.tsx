@@ -12,10 +12,18 @@ type BarberCardProps = {
   serviceTitle?: string
   /** h2 on the /barbers page, h3 inside a homepage section */
   headingLevel?: 'h2' | 'h3'
+  /** Load the portrait eagerly, at high priority (the first card at the top of a page) */
+  priority?: boolean
   onViewProfile: (barberId: string) => void
 }
 
-export function BarberCard({ barber, serviceTitle, headingLevel: Heading = 'h3', onViewProfile }: BarberCardProps) {
+export function BarberCard({
+  barber,
+  serviceTitle,
+  headingLevel: Heading = 'h3',
+  priority = false,
+  onViewProfile,
+}: BarberCardProps) {
   const titleId = `barber-${barber.id}-name`
 
   // A plain click opens the profile over the page; modified clicks keep the link's default (e.g. a new tab)
@@ -28,7 +36,7 @@ export function BarberCard({ barber, serviceTitle, headingLevel: Heading = 'h3',
   return (
     <article className={styles.card} aria-labelledby={titleId}>
       <div className={styles.media}>
-        <BarberPortrait barber={barber} decorative />
+        <BarberPortrait barber={barber} decorative priority={priority} />
       </div>
       <div className={styles.body}>
         {barber.role ? <p className={styles.role}>{barber.role}</p> : null}

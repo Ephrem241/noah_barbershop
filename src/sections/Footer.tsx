@@ -4,11 +4,13 @@ import { Icon } from '../components/Icon'
 import { Logo } from '../components/Logo'
 import { SectionLink } from '../components/SectionLink'
 import { useShop } from '../content/hooks'
-import { navLinks, site } from '../data/site'
+import { site } from '../data/site'
+import { useNavLinks } from '../hooks/useNavLinks'
 import styles from './Footer.module.css'
 
 export function Footer() {
   const shop = useShop()
+  const navLinks = useNavLinks()
   const year = new Date().getFullYear()
 
   return (

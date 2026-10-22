@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useMatch } from 'react-router-dom'
 import { BARBERS_PATH } from '../booking/context'
 import { Button } from '../components/Button'
 import { Icon } from '../components/Icon'
@@ -6,18 +7,19 @@ import { Logo } from '../components/Logo'
 import { SectionLink } from '../components/SectionLink'
 import { openingSummary } from '../content/api'
 import { useShop } from '../content/hooks'
-import { navLinks } from '../data/site'
 import { useActiveSection } from '../hooks/useActiveSection'
 import { useIsHomePage } from '../hooks/useIsHomePage'
+import { useNavLinks } from '../hooks/useNavLinks'
 import { useScrolledPast } from '../hooks/useScrolledPast'
 import styles from './Navbar.module.css'
 
-// Scrollspy targets, in page order
-const sectionIds = ['home', ...navLinks.map((link) => link.id)]
-
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const navLinks = useNavLinks()
+  // Scrollspy targets, in page order
+  const sectionIds = useMemo(() => ['home', ...navLinks.map((link) => link.id)], [navLinks])
   const isHome = useIsHomePage()
+  const onBarbersPage = useMatch(BARBERS_PATH) !== null
   const scrolled = useScrolledPast('home', 72)
   const spied = useActiveSection(sectionIds, 'home')
   // Other pages have no hero to sit over, and no sections to highlight
@@ -74,7 +76,6 @@ export function Navbar() {
   }, [])
 
   const headerClass = [styles.header, solid && styles.solid, menuOpen && styles.menuOpen].filter(Boolean).join(' ')
-  const onBarbersPage = !isHome
 
   return (
     <header className={headerClass}>

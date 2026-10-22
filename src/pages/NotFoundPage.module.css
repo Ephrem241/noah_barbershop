@@ -1,0 +1,46 @@
+/* Charcoal page under the (solid) navbar, tall enough that the footer doesn't ride up */
+.page {
+  display: flex;
+  align-items: center;
+  min-height: min(720px, 80svh);
+  padding: calc(var(--nav-h) + clamp(40px, 6vw, 80px)) 0 clamp(56px, 6vw, 96px);
+  background:
+    radial-gradient(ellipse 60% 90% at 100% 0%, rgb(207 174 120 / 0.09), transparent 70%),
+    var(--bg);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.title {
+  margin-top: 18px;
+  font-size: clamp(2.4rem, 1.6rem + 3.2vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.text {
+  max-width: 40ch;
+  margin-top: 18px;
+  color: var(--text-body);
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+@media (max-width: 599px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+}

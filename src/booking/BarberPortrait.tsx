@@ -7,10 +7,12 @@ type BarberPortraitProps = {
   barber: Barber
   /** In cards the name sits right below, so the image needs no alt text there */
   decorative?: boolean
+  /** Above the fold: load right away, at high priority */
+  priority?: boolean
   className?: string
 }
 
-export function BarberPortrait({ barber, decorative = false, className }: BarberPortraitProps) {
+export function BarberPortrait({ barber, decorative = false, priority = false, className }: BarberPortraitProps) {
   const classes = [styles.portrait, className].filter(Boolean).join(' ')
   if (barber.photo) {
     return (
@@ -18,7 +20,8 @@ export function BarberPortrait({ barber, decorative = false, className }: Barber
         className={classes}
         src={barber.photo}
         alt={decorative ? '' : `Portrait of ${barber.name}`}
-        loading="lazy"
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : undefined}
         decoding="async"
       />
     )

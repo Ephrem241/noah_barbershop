@@ -51,8 +51,8 @@ Open `https://<your-site>/admin` → **Sign in with Google**.
 |---|---|
 | Booking requests | Requests sent through the website’s former request form. The form has been removed (clients now contact their barber directly), so nothing new arrives; you can still call or WhatsApp those clients, set the status and add notes. |
 | Barbers | Add, edit, hide, reorder, delete. Portrait, bio, specialties and the three contact buttons (see *Barber profiles and contact buttons* below). Upload work photos and videos. **A profile appears on the website only once it is visible and “Sample profile” is turned off**; while none is published, `/barbers` and “Meet the barbers” show a short note about the team instead (a client review naming Ephrem, plus Call the shop / Get Directions). |
-| Services & prices | Title, description, price in birr (a “from” price shows as *from ETB 350*), optional duration in minutes (shown only when filled in), image, order, hide. |
-| Gallery | Upload photos (resized automatically) and short videos, describe each, pick a category, reorder, hide. “Our Work” shows every visible item; videos show their first frame with a play button and play when tapped. The style filters appear once items use at least two categories. |
+| Services & prices | Title, description, price in birr (a “from” price shows as *from ETB 350*), optional duration in minutes (shown only when filled in), image, order, hide. A service without an image shows as a plain text line of the menu (no stand-in photo). The website tidies spacing and capitalises the first letter of each title, but spelling is shown as typed. |
+| Gallery | Upload photos (resized automatically) and short videos, describe each, pick a category, reorder, hide. “Our Work” shows every visible item **you uploaded**: the seeded `gallery-1…5` placeholders are never shown, and while nothing is uploaded the section and its menu link stay hidden. Videos show their first frame with a play button and play when tapped. The style filters appear once items use at least two categories. |
 | Testimonials | Add real client reviews with source and date, reorder, hide. They appear in the “Reviews” section. |
 | Shop info | Phone, address, **exact map location**, opening hours, Tripadvisor badge (link, rating, review count), Instagram / Facebook / TikTok links. |
 | Admins | Add or remove admin Gmail addresses (you can’t remove yourself or the last admin). |
@@ -60,8 +60,8 @@ Open `https://<your-site>/admin` → **Sign in with Google**.
 Every change shows on the website immediately (visitors see it on their next page load).
 
 ### Barber profiles and contact buttons
-Every “Book” button on the website (hero, navbar, each service, the phone bar) opens **`/barbers`**, “Choose Your
-Barber”. Each barber card has up to three buttons, and the client agrees on a day and time with the barber directly;
+Every booking button on the website (hero “Explore Our Barbers”, navbar “Book Now”, each service, the phone bar)
+opens **`/barbers`**, “Choose Your Barber”. Each barber card has up to three buttons, and the client agrees on a day and time with the barber directly;
 the website never claims a message confirms a booking. Booking from a service adds it to the address
 (`/barbers?service=skin-fade-taper-fade`) and to the WhatsApp message.
 
@@ -78,6 +78,9 @@ the website never claims a message confirms a booking. Booking from a service ad
   simply hides that button.
 - To publish a profile (visible, “Sample profile” off), it needs a **portrait, a bio, at least one specialty and at
   least one contact**. Saving then asks you to confirm the exact numbers and username visitors will see.
+- Specialties and languages are tags: type one and press Enter, or type several separated by commas (“Fades,
+  beard grooming”) and they become separate tags. Experience can be a phrase (“6 years”) or a number: `8` shows as
+  “8 years”, `>10` or `10+` as “10+ years”.
 - The first two or three lines of the bio show on the card; the full bio, languages and work photos are on the
   profile (`/barbers#book/<link name>`, also “View on website” in the editor).
 
@@ -127,8 +130,8 @@ Replace them with real photos from the shop as soon as you can — real work is 
 
 | Where | How to replace | Best size |
 |---|---|---|
-| Services menu thumbnails | Admin → Services & prices → Edit → Image | Square-ish, ≥ 400 px |
-| “Our Work” gallery | Admin → Gallery: upload real cuts (photos or short videos), then hide or delete `gallery-1…5` | Portrait or square, ≥ 1000 px |
+| Services menu thumbnails | Admin → Services & prices → Edit → Image (until then the service is a text-only line) | Square-ish, ≥ 400 px |
+| “Our Work” gallery | Admin → Gallery: upload real cuts (photos or short videos); the section appears with the first upload. `gallery-1…5` are never shown, so hide or delete them to tidy the list | Portrait or square, ≥ 1000 px |
 | Barber portraits and work | Admin → Barbers → Edit: portrait, photos and short videos | Portrait 800 × 1000 px |
 | Sample work video | Admin → Barbers: delete the “Sample video” item from each profile (sample profiles aren’t shown on the website) | — |
 

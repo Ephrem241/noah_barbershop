@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { BarbersPage } from './pages/BarbersPage'
 import { HomePage } from './pages/HomePage'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { SiteLayout } from './pages/SiteLayout'
 
 // The admin panel is a separate chunk: visitors never download it
@@ -20,8 +21,9 @@ export default function App() {
           }
         />
         <Route element={<SiteLayout />}>
+          <Route path="/" element={<HomePage />} />
           <Route path="/barbers" element={<BarbersPage />} />
-          <Route path="*" element={<HomePage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
