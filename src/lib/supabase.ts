@@ -1,17 +1,12 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from './database.types'
+import { isSupabaseConfigured, supabaseKey, supabaseUrl } from './env'
 
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
-const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined
-
-/** False when the env vars are missing — the public site then falls back to its built-in content. */
-export const isSupabaseConfigured = Boolean(url && key)
-
-export const supabaseUrl = url ?? ''
-export const supabaseKey = key ?? ''
+// The Supabase client, for the admin panel (sign-in, writes, uploads). The public site doesn't import this file.
+export { isSupabaseConfigured, supabaseKey, supabaseUrl }
 
 export const supabase: SupabaseClient<Database> | null = isSupabaseConfigured
-  ? createClient<Database>(url!, key!, {
+  ? createClient<Database>(supabaseUrl, supabaseKey, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' },
     })
   : null

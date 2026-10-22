@@ -71,9 +71,21 @@
     <!-- Self-hosted fonts (src/styles/fonts.css): the latin files are needed for the first paint -->
     <link rel="preload" as="font" type="font/woff2" href="/fonts/fraunces-v38-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-sans-v17-latin.woff2" crossorigin />
-    <!-- The hero video's poster is the first thing painted -->
-    <link rel="preload" as="image" href="/images/hero-poster.jpg" fetchpriority="high" />
-    <link rel="preload" as="image" href="/images/logo-nav.webp" type="image/webp" />
+    <!--
+      Images in the first paint, preloaded only where they're shown: the hero video's poster on the homepage, the
+      navbar logo on every page of the website (the admin panel has neither)
+    -->
+    <script>
+      function preloadImage(href, priority) {
+        var link = Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href: href })
+        if (priority) link.setAttribute('fetchpriority', priority)
+        document.head.appendChild(link)
+      }
+      if (location.pathname === '/') preloadImage('/images/hero-poster.jpg', 'high')
+      if (!location.pathname.startsWith('/admin')) preloadImage('/images/logo-nav.webp')
+    </script>
+    <!-- Supabase preconnects and the early content requests (vite.config.ts); before the stylesheet, which would hold them up -->
+    <!--noah:early-content-->
   </head>
   <body>
     <div id="root"></div>

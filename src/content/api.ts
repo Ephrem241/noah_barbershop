@@ -5,10 +5,14 @@ import { site, socials as fallbackSocials } from '../data/site'
 import type { Service } from '../data/services'
 import type { Testimonial } from '../data/testimonials'
 import type { Tables } from '../lib/database.types'
-import { isStoragePath, mediaUrl } from '../lib/media'
+import { isStoragePath, mediaUrl, resizedSrcSet } from '../lib/mediaUrl'
 import { directionsToQuery, directionsUrl, embedUrl, pinUrl, searchUrl } from './location'
+import { contentPaths } from './queries'
+import { getRows } from './rest'
 import { formatExperience, splitList, tidyTitle } from './tidy'
-import { requireSupabase } from '../lib/supabase'
+
+/** Widths of the resized portrait copies offered to the browser (cards are up to ~380px wide, at 2–3× density) */
+const PORTRAIT_WIDTHS = [400, 640, 960] as const
 
 /** Public query keys — admin mutations invalidate these so edits show up on the site immediately. */
 export const contentKeys = {
@@ -61,13 +65,8 @@ export const fallbackShop: ShopInfo = {
   socials: fallbackSocials.filter((s) => s.href && s.href !== '#').map((s) => ({ ...s })),
 }
 
-const fail = (error: { message: string }): never => {
-  throw new Error(error.message)
-}
-
 export async function fetchShop(): Promise<ShopInfo> {
-  const { data: row, error } = await requireSupabase().from('shop_settings').select('*').eq('id', 1).maybeSingle()
-  if (error) fail(error)
+  const [row] = await getRows<Tables<'shop_settings'>>(contentPaths.shop)
   if (!row) return fallbackShop
   const socials: ShopInfo['socials'] = [
     { label: 'Instagram', icon: 'instagram' as const, href: row.instagram_url },
@@ -109,19 +108,11 @@ export const toService = (row: Tables<'services'>): Service => ({
 })
 
 export async function fetchServices(): Promise<Service[]> {
-  const { data, error } = await requireSupabase().from('services').select('*').eq('is_active', true).order('sort_order')
-  if (error) fail(error)
-  return (data ?? []).map(toService)
+  return (await getRows<Tables<'services'>>(contentPaths.services)).map(toService)
 }
 
 export async function fetchGallery(): Promise<GalleryImage[]> {
-  const { data, error } = await requireSupabase()
-    .from('gallery_items')
-    .select('*')
-    .eq('is_active', true)
-    .order('sort_order')
-  if (error) fail(error)
-  return (data ?? [])
+  return (await getRows<Tables<'gallery_items'>>(contentPaths.gallery))
     // Only media uploaded in /admin: the seeded site files (/images/gallery-*.jpg) are generated stand-ins, and the
     // website never presents them as the shop's work
     .filter((row) => isStoragePath(row.path))
@@ -138,13 +129,7 @@ export async function fetchGallery(): Promise<GalleryImage[]> {
 }
 
 export async function fetchTestimonials(): Promise<Testimonial[]> {
-  const { data, error } = await requireSupabase()
-    .from('testimonials')
-    .select('*')
-    .eq('is_published', true)
-    .order('sort_order')
-  if (error) fail(error)
-  return (data ?? []).map((row) => ({
+  return (await getRows<Tables<'testimonials'>>(contentPaths.testimonials)).map((row) => ({
     id: row.id,
     quote: row.quote,
     name: row.name,
@@ -164,20 +149,13 @@ const toWorkItem = (m: Tables<'barber_media'>): WorkItem | null => {
 
 /** Published barbers only: profiles still marked "Sample profile" in /admin stay off the website. */
 export async function fetchBarbers(): Promise<Barber[]> {
-  const { data, error } = await requireSupabase()
-    .from('barbers')
-    .select('*, barber_media(*)')
-    .eq('is_active', true)
-    .eq('is_sample', false)
-    .order('sort_order')
-    .order('sort_order', { referencedTable: 'barber_media' })
-  if (error) fail(error)
-  return ((data ?? []) as BarberRow[]).map((row) => ({
+  return (await getRows<BarberRow>(contentPaths.barbers)).map((row) => ({
     id: row.slug,
     uuid: row.id,
     name: row.name,
     role: row.role,
     photo: mediaUrl(row.photo_path),
+    photoSrcSet: resizedSrcSet(row.photo_path, PORTRAIT_WIDTHS),
     bio: row.bio,
     // Entries typed as one tag ("Scissors, fades") show as separate chips
     specialties: splitList(row.specialties),

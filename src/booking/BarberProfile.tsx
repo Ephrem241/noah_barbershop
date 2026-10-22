@@ -23,7 +23,7 @@ export function BarberProfile({ barber, serviceTitle, headingRef, onOpenMedia }:
     <article className={styles.profile} aria-labelledby="barber-title">
       <div className={styles.header}>
         <div className={styles.portrait}>
-          <BarberPortrait barber={barber} />
+          <BarberPortrait barber={barber} sizes="(max-width: 767px) 132px, 300px" />
         </div>
 
         <div className={styles.info}>

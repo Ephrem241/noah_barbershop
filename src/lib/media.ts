@@ -1,18 +1,12 @@
-import { requireSupabase, supabase } from './supabase'
+import { isStoragePath, MEDIA_BUCKET } from './mediaUrl'
+import { requireSupabase } from './supabase'
 
-export const MEDIA_BUCKET = 'media'
+// Uploads and deletions for the admin panel; public addresses live in ./mediaUrl (no Supabase client needed)
+export { isStoragePath, MEDIA_BUCKET, mediaUrl } from './mediaUrl'
+
 export const MAX_UPLOAD_MB = 50 // Supabase free plan per-file limit
 const MAX_UPLOAD_BYTES = MAX_UPLOAD_MB * 1024 * 1024
 const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime']
-
-/** Seeded assets are site paths ("/images/…"); uploads are Storage object paths ("gallery/<uuid>.webp"). */
-export const isStoragePath = (path: string) => !path.startsWith('/') && !/^https?:\/\//.test(path)
-
-export function mediaUrl(path: string | null | undefined): string | undefined {
-  if (!path) return undefined
-  if (!isStoragePath(path)) return path
-  return supabase?.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl
-}
 
 const toBlob = (canvas: HTMLCanvasElement, type: string, quality: number) =>
   new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality))

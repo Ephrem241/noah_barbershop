@@ -3,7 +3,7 @@ import { barbers as fallbackBarbers } from '../data/barbers'
 import { gallery as fallbackGallery } from '../data/gallery'
 import { services as fallbackServices } from '../data/services'
 import { testimonials as fallbackTestimonials } from '../data/testimonials'
-import { isSupabaseConfigured } from '../lib/supabase'
+import { isSupabaseConfigured } from '../lib/env'
 import {
   contentKeys,
   fallbackShop,

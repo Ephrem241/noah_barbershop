@@ -141,6 +141,9 @@ footer, and Instagram also under “Our Work”), real barber names and bios, an
 ### Photo & video tips
 - Photos: JPG/PNG/WebP straight from a phone are fine — they’re resized in the browser before upload (gallery
   ~1400px, service and work photos ~1600px).
+- Barber portraits are shown as smaller copies that Supabase makes on the fly (Image Transformations, part of the
+  paid plan; a phone downloads ~30–45 KB instead of the full upload). If that feature is ever switched off, the
+  website falls back to the original photos automatically.
 - Videos: **MP4**, ideally under 15 seconds; the hard limit is **50 MB** per file (Supabase free plan). The first
   frame is saved automatically as the thumbnail. Videos aren’t compressed on upload, so compress a long phone clip
   with [ffmpeg](https://ffmpeg.org/):

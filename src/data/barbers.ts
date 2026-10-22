@@ -38,6 +38,8 @@ export type Barber = {
   role: string
   /** Portrait photo; without one, a gold monogram is shown */
   photo?: string
+  /** Resized copies of the portrait (srcset), for uploads; `photo` stays the fallback */
+  photoSrcSet?: string
   /** Short introduction; the first lines show on the barber card, all of it on the profile */
   bio: string
   specialties: string[]
