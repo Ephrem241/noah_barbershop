@@ -17,7 +17,15 @@ export function Logo({ size = 'nav', onClick }: LogoProps) {
   const art = ART[size]
   return (
     <SectionLink section="home" className={`${styles.logo} ${styles[size]}`} onClick={onClick} aria-label="Noah Barbershop — home">
-      <img src={art.src} alt="" width={art.width} height={art.height} decoding="async" />
+      {/* The footer emblem (91 KB) waits until it's near the screen; the navbar lockup is preloaded */}
+      <img
+        src={art.src}
+        alt=""
+        width={art.width}
+        height={art.height}
+        loading={size === 'footer' ? 'lazy' : undefined}
+        decoding="async"
+      />
     </SectionLink>
   )
 }
