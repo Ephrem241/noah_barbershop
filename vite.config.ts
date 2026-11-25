@@ -21,7 +21,7 @@ function earlyContent(url: string | undefined, key: string | undefined): Plugin 
       const tags = `<link rel="preconnect" href="${url}" crossorigin />
     <link rel="preconnect" href="${url}" />
     <script>
-      if (!location.pathname.startsWith('/admin')) {
+      if (!location.pathname.startsWith('/admin') && !/[?&](code|error_description)=/.test(location.search)) {
         window.__noahContent = {}
         for (const [path, url] of Object.entries(${JSON.stringify(urls)}))
           window.__noahContent[path] = fetch(url).then((res) => (res.ok ? res.json() : null), () => null)

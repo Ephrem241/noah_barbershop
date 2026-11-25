@@ -76,6 +76,12 @@
       navbar logo on every page of the website (the admin panel has neither)
     -->
     <script>
+      // A Google sign-in that comes back to a public page (Supabase falls back to the Site URL when the address it
+      // started from isn't on its Redirect URLs list) is finished by the admin panel: the public pages don't load
+      // the Supabase client, so the one-time code would otherwise be dropped and the sign-in silently lost.
+      if (!location.pathname.startsWith('/admin') && /[?&](code|error_description)=/.test(location.search))
+        location.replace('/admin' + location.search + location.hash)
+
       function preloadImage(href, priority) {
         var link = Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href: href })
         if (priority) link.setAttribute('fetchpriority', priority)

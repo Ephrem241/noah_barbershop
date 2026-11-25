@@ -175,6 +175,10 @@ footer and admin sign-in), `logo-mark.webp` (admin header), `logo-512.jpg` (sear
   `https://wxyfhszrtumhpavjmhul.supabase.co/auth/v1/callback`.
 - Have to sign in twice, or Google sends you back to the homepage / another domain → the address you started
   from isn’t in **Redirect URLs** (step 1b.2). Add `https://<that address>/**`.
+  (A sign-in that Supabase sends back to the homepage instead of `/admin` is forwarded to `/admin` and finishes
+  there, as long as it is the same address; the public pages don’t load the Supabase client themselves.)
+- *“The sign-in didn’t finish on this address”* → Supabase sent the sign-in back to a different address than the
+  one you started from (usually the Site URL). Add the address you use to **Redirect URLs**.
 - Signed in but “Not authorized” → that Gmail isn’t on the Admins list; an existing admin must add it.
 - Website shows old content → it falls back to built-in content only if Supabase can’t be reached; check the
   environment variables on Vercel.
