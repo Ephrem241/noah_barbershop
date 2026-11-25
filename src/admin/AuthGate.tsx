@@ -32,8 +32,9 @@ function GoogleMark() {
   )
 }
 
-function LoginScreen() {
-  const [error, setError] = useState<string | null>(readAuthError)
+function LoginScreen({ signInError }: { signInError: string | null }) {
+  const [ownError, setError] = useState<string | null>(readAuthError)
+  const error = ownError ?? signInError
   const [busy, setBusy] = useState(false)
   const googleEnabled = useGoogleEnabled().data
   const googleOff = googleEnabled === false
@@ -68,10 +69,14 @@ function LoginScreen() {
       {error ? (
         <p className={styles.screenError} role="alert">
           {error}
-          <br />
-          <span className={styles.screenHint}>
-            If this keeps happening, Google sign-in may not be enabled yet — see docs/ADMIN_SETUP.md.
-          </span>
+          {ownError ? (
+            <>
+              <br />
+              <span className={styles.screenHint}>
+                If this keeps happening, Google sign-in may not be enabled yet — see docs/ADMIN_SETUP.md.
+              </span>
+            </>
+          ) : null}
         </p>
       ) : null}
     </Screen>
@@ -80,7 +85,7 @@ function LoginScreen() {
 
 /** Signed out → Google sign-in. Signed in but not on the admin list → "not authorized". Admin → the panel. */
 export function AuthGate({ children }: { children: ReactNode }) {
-  const { session, loading } = useSession()
+  const { session, loading, error: signInError } = useSession()
   const admin = useIsAdmin(session)
 
   if (!isSupabaseConfigured) {
@@ -93,13 +98,14 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (loading || (session && admin.isPending)) {
     return <div className="admin-boot" role="status" aria-label="Checking your account" />
   }
-  if (!session) return <LoginScreen />
+  if (!session) return <LoginScreen signInError={signInError} />
   if (admin.isError || !admin.data) {
     return (
-      <Screen title="Not authorized">
+      <Screen title={admin.isError ? 'Couldn’t check your account' : 'Not authorized'}>
         <p className={styles.screenText}>
-          {session.user.email} isn’t on the admin list. Ask an existing admin to add this Google account under
-          Admins.
+          {admin.isError
+            ? `${admin.error.message}. Reload the page to try again.`
+            : `${session.user.email} isn’t on the admin list. Ask an existing admin to add this Google account under Admins.`}
         </p>
         <Button variant="secondary" icon="logout" onClick={() => void signOut()}>
           Sign out

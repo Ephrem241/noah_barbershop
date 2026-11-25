@@ -28,15 +28,37 @@ export function useGoogleEnabled() {
 }
 
 export function useSession() {
-  const [state, setState] = useState<{ session: Session | null; loading: boolean }>({
+  const [state, setState] = useState<{ session: Session | null; loading: boolean; error: string | null }>({
     session: null,
     loading: isSupabaseConfigured,
+    error: null,
   })
 
   useEffect(() => {
     if (!supabase) return
-    supabase.auth.getSession().then(({ data }) => setState({ session: data.session, loading: false }))
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => setState({ session, loading: false }))
+    const auth = supabase.auth
+    // initialize() resolves once the client has finished any sign-in in the URL (?code=…). If that exchange
+    // fails, getSession() just reports "no session": take the error from here so the login screen can show it
+    // instead of silently starting over.
+    // A code with no matching verifier in this browser (sign-in started on another address) is ignored outright,
+    // with no error at all; that case gets its own message.
+    void auth.initialize().then(async ({ error }) => {
+      const { data } = await auth.getSession()
+      const url = new URL(window.location.href)
+      let message: string | null = null
+      if (!data.session && url.searchParams.has('code')) {
+        message =
+          error?.message ??
+          'The sign-in didn’t finish on this address. Please try again from this page. If it keeps happening, ' +
+            'this address may be missing from Supabase’s Redirect URLs (see docs/ADMIN_SETUP.md).'
+        url.searchParams.delete('code')
+        window.history.replaceState(window.history.state, '', url)
+      }
+      setState({ session: data.session, loading: false, error: message })
+    })
+    const { data } = auth.onAuthStateChange((_event, session) =>
+      setState((s) => ({ session, loading: false, error: session ? null : s.error })),
+    )
     return () => data.subscription.unsubscribe()
   }, [])
 
